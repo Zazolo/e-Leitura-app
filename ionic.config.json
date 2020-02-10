@@ -1,0 +1,7 @@
+{
+  "name": "e-Leitura-app",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,28 @@
+<ion-content fullscreen>
+
+  <ion-grid justify-content-center>
+    <ion-row justify-content-center>
+      <ion-img src="../../assets/WHITE_LOGO.svg" class=""></ion-img>
+    </ion-row>
+    <ion-row justify-content-center class="containerBtns">
+      <ion-row justify-content-center class="headerInputs">
+        <ion-text>Acesso</ion-text>
+      </ion-row>
+      <ion-row justify-content-center class="">
+        <ion-input class="" type="text" [(ngModel)]="login" placeholder="login"></ion-input>
+      </ion-row>
+      <ion-row justify-content-center class="">
+        <ion-input [(ngModel)]="senha" type="password" placeholder="senha"></ion-input>
+      </ion-row>
+      <ion-row>
+        <ion-button fill="solid" expand="block" size="default">Entrar</ion-button>
+      </ion-row>
+      <ion-row>
+        <ion-button fill="outline" size="default" (click)="goCadastrar()">Cadastrar</ion-button>
+      </ion-row>
+    </ion-row>
+    
+  </ion-grid>
+
+
+</ion-content>
