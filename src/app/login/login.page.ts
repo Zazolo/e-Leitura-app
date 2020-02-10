@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,8 @@ export class LoginPage implements OnInit {
   private senha;
   
   constructor(
-    private route:Router
+    private route:Router,
+    private authService:AuthenticationService
   ) { }
 
   ngOnInit() {
@@ -23,7 +25,13 @@ export class LoginPage implements OnInit {
   }
 
   logar(){
-    
+    this.authService.login(this.login, this.senha).then((response) => {
+      if(response){
+        alert("LOGADO!");
+      } else {
+        alert("Nome de usuário ou senha incorreto!");
+      }
+    })
   }
 
 }

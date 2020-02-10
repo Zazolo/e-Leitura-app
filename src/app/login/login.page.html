@@ -15,7 +15,7 @@
         <ion-input [(ngModel)]="senha" type="password" placeholder="senha"></ion-input>
       </ion-row>
       <ion-row>
-        <ion-button fill="solid" expand="block" size="default">Entrar</ion-button>
+        <ion-button fill="solid" expand="block" size="default" (click)="logar()">Entrar</ion-button>
       </ion-row>
       <ion-row>
         <ion-button fill="outline" size="default" (click)="goCadastrar()">Cadastrar</ion-button>
