@@ -1,9 +1,12 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>criar-paragrafo</ion-title>
+    <ion-title>Novo Parágrafo</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="criar()">Publicar</ion-button>
+    </ion-buttons>
   </ion-toolbar>
+  
 </ion-header>
-
 <ion-content>
-
+  <ion-textarea [(ngModel)]="texto" placeholder="Digite o paragrafo para votação..." maxLength="500" rows="30" wrap="soft" autofocus></ion-textarea>
 </ion-content>

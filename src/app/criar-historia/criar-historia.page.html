@@ -1,9 +1,68 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>criar-historia</ion-title>
+    <ion-buttons slot="start" *ngIf="stage > 0">
+      <ion-button (click)="recuarStage()">Voltar</ion-button>
+    </ion-buttons>
+    <ion-title>Nova História</ion-title>
+    <ion-buttons slot="end" *ngIf="stage <= 1">
+      <ion-button (click)="avancarStage()">Avançar</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="stage == 2">
+      <ion-button (click)="publicar()">Publicar</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="stage == 0">
+  <ion-textarea [(ngModel)]="texto" placeholder="Digite o primeiro paragrafo da História..." maxLength="500" rows="30" wrap="soft" autofocus></ion-textarea>
+</ion-content>
 
+<ion-content *ngIf="stage == 1">
+  <ion-list>
+    <ion-item>
+      <ion-label position="floating">Titulo para a História</ion-label>
+      <ion-input type="text" [(ngModel)]="titulo"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Quantidade de ciclos</ion-label>
+      <ion-input type="number" [(ngModel)]="quantidade_ciclos" min="1" max="1080"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Tempo de cada ciclo</ion-label>
+      <ion-input type="number" [(ngModel)]="tempo_ciclo" min="1" max="60"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Senha de acesso</ion-label>
+      <ion-input type="text" [(ngModel)]="senha" minLength="3"></ion-input>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-content *ngIf="stage == 2">
+  <ion-grid>
+    <ion-row>
+      <h1>Resumo da história</h1>
+    </ion-row>
+    <ion-row>
+      <ion-label>Título: {{titulo}}</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-label>Quantidade de ciclos: {{quantidade_ciclos}}</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-label>Tempo de cada ciclo: {{tempo_ciclo}}</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-label>Tempo total estimado: {{quantidade_ciclos * tempo_ciclo}} minutos.</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-label>Senha para acesso: {{senha?senha:"nenhuma"}}.</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-label>E a história começa...</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-text>{{texto}}</ion-text>
+    </ion-row>
+  </ion-grid>
 </ion-content>

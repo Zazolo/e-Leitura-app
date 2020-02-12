@@ -1,9 +1,68 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>ver-historia</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content *ngIf="historia != null">
+  <ion-grid>
+    <ion-row>
+      <ion-label>Criador por {{historia.usuario_id.nome}}</ion-label>
+    </ion-row>
 
-<ion-content>
+    <ion-row>
+      <ion-text>{{historia.titulo}}</ion-text>
+    </ion-row>
+
+    <ion-row>
+      <ion-label>{{historia.texto}}</ion-label>
+    </ion-row>
+
+    <div *ngFor="let p of historia.paragrafos">
+      <div *ngIf="p.ciclo != historia.ciclo_atual">
+        <ion-row>
+          <ion-label>Trecho produzido por: {{p.usuario_id.nome}}</ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-text>{{p.texto}}</ion-text>
+        </ion-row>
+      </div>
+    </div>
+
+
+    <div *ngIf="historia.paragrafos.length > 0">
+      <div *ngFor="let p of historia.paragrafos">
+        <ion-row *ngIf="p.ciclo == historia.ciclo_atual">
+          <ion-card>
+            <ion-grid>
+              <ion-row>
+                <h4>Vote no paragrafo de {{p.usuario_id.nome}}</h4>
+              </ion-row>
+              <ion-row>
+                <ion-label>Trecho produzido por: {{p.usuario_id.nome}}</ion-label>
+              </ion-row>
+      
+              <ion-row>
+                <ion-text>{{p.texto}}</ion-text>
+              </ion-row>
+              <ion-row>
+                <ion-col *ngIf="p.votou == false && p.usuario_id.login != usuarioLogadoLogin">
+                  <ion-button fill="outline" (click)="votar(p.id);"><ion-icon icon="checkmark" size="32px"></ion-icon> Gostei</ion-button>
+                </ion-col>
+                <ion-col *ngIf="p.usuario_id.login == usuarioLogadoLogin">
+                  <ion-button fill="outline" (click)="removerParagrafo(p.id);"><ion-icon icon="trash" size="32px"></ion-icon> Remover Paragrafo</ion-button>
+                </ion-col>
+                <ion-col *ngIf="p.votou == true">
+                  <ion-icon icon="checkmark" size="32px"></ion-icon><ion-label>Você já votou!</ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </ion-row>
+      </div>
+    </div>
+
+
+  </ion-grid>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="criarParagrafo()">
+      <ion-icon name="text"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

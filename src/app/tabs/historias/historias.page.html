@@ -1,9 +1,37 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>historias</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
 
+  <ion-grid *ngIf="historias != undefined">
+    <ion-row *ngFor="let h of historias">
+      <ion-card>
+        <ion-row>
+          <ion-text class="nome">{{h.usuario_id.nome}}</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-text class="login">{{h.usuario_id.login}}</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-text class="titulo">{{h.titulo}}</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button size="small" (click)="participar(h.id);">Participar</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-text>{{h.dthr_criacao}}</ion-text>
+          </ion-col>
+          
+        </ion-row>
+        
+      </ion-card>
+    </ion-row>
+  </ion-grid>
+
+
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="criar()">
+      <ion-icon name="create"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-button (click)="deslogar()">DESLOGAR</ion-button>
 </ion-content>
