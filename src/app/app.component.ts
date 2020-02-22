@@ -24,18 +24,21 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      
       this.authenticationService.authenticationState.subscribe(checked => {
         this.authenticationService.authenticationState.subscribe(state => {
           if(checked){
             if (state) {
+              console.log("AQUIII? 1");
               this.router.navigate(['tabs', 'historias']);
             } else {
+              console.log("AQUIII? 2");
               this.router.navigate(['login']);
             }
           }
         });
       });
+      //this.splashScreen.hide();
     });
   }
 }

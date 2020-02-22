@@ -50,7 +50,7 @@ export class AuthenticationService {
   register(login:string, senha:string, nome:string){
     console.log(nome + login + senha);
     return new Promise((resolve, reject) => {
-      this.http.post('http://192.168.0.108/autenticar/novo/', {login:login, senha:senha, nome:nome}, {}).then((response) => {
+      this.http.post('http://192.168.43.64/autenticar/novo/', {login:login, senha:senha, nome:nome}, {}).then((response) => {
         if(response.status == 200){
           console.log("Login criado com sucesso!");
           resolve(true);
@@ -68,12 +68,13 @@ export class AuthenticationService {
 
   login(login:string, senha:string):Promise<boolean> {
     return new Promise((resolve, reject) => {
-      this.http.post('http://192.168.0.108/autenticar/', {login:login, senha:senha}, {}).then((response)=>{
+      this.http.post('http://192.168.43.64/autenticar/', {login:login, senha:senha}, {}).then((response)=>{
         console.log(response);
         if(response.status == 200) {
           response.data = JSON.parse(response.data);
           console.log(response.data);
           this.storage.set(TOKEN_KEY, 'Bearer ' + response.data.response).then(() => {
+            console.log("Inserindo token--->" + response.data.response);
             this.authenticationState.next(true);
             this.storage.set('usuario', login).then((ok) => {
               this.userAuthenticated.next(login);
@@ -86,6 +87,8 @@ export class AuthenticationService {
           console.log(JSON.stringify(response));
           reject(false)
         }
+      }).catch(error => {
+        reject(null);
       });  
     })
     
@@ -93,13 +96,18 @@ export class AuthenticationService {
   }
  
   logout() {
-    return this.storage.remove(TOKEN_KEY).then(() => {
+    this.storage.remove(TOKEN_KEY).then(() => {
+      this.storage.remove('usuario').then((ok) => {
+        this.userAuthenticated.next(null);
+        console.log("Deslogando...?");
+      });
       this.authenticationState.next(false);
+      console.log("Deslogando...? 22")
     });
   }
  
   isAuthenticated() {
-    return this.authenticationState.value;
+      return this.authenticationState.value;
   }
 
   authenticationStateChecked(){

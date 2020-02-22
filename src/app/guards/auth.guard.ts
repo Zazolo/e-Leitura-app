@@ -9,6 +9,7 @@ export class AuthGuard implements CanActivate{
   constructor(public auth: AuthenticationService) {}
  
   canActivate(): boolean {
+    console.log("chamou?" + this.auth.isAuthenticated());
     return this.auth.isAuthenticated();
   }
 }

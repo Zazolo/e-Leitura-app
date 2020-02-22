@@ -471,17 +471,17 @@ const routes = [
     },
     {
         path: 'criar-historia',
-        loadChildren: () => __webpack_require__.e(/*! import() | criar-historia-criar-historia-module */ "criar-historia-criar-historia-module").then(__webpack_require__.bind(null, /*! ./criar-historia/criar-historia.module */ "./src/app/criar-historia/criar-historia.module.ts")).then(m => m.CriarHistoriaPageModule),
+        loadChildren: () => Promise.all(/*! import() | criar-historia-criar-historia-module */[__webpack_require__.e("common"), __webpack_require__.e("criar-historia-criar-historia-module")]).then(__webpack_require__.bind(null, /*! ./criar-historia/criar-historia.module */ "./src/app/criar-historia/criar-historia.module.ts")).then(m => m.CriarHistoriaPageModule),
         canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]]
     },
     {
         path: 'ver-historia',
-        loadChildren: () => __webpack_require__.e(/*! import() | ver-historia-ver-historia-module */ "ver-historia-ver-historia-module").then(__webpack_require__.bind(null, /*! ./ver-historia/ver-historia.module */ "./src/app/ver-historia/ver-historia.module.ts")).then(m => m.VerHistoriaPageModule),
+        loadChildren: () => Promise.all(/*! import() | ver-historia-ver-historia-module */[__webpack_require__.e("common"), __webpack_require__.e("ver-historia-ver-historia-module")]).then(__webpack_require__.bind(null, /*! ./ver-historia/ver-historia.module */ "./src/app/ver-historia/ver-historia.module.ts")).then(m => m.VerHistoriaPageModule),
         canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]]
     },
     {
         path: 'criar-paragrafo',
-        loadChildren: () => __webpack_require__.e(/*! import() | criar-paragrafo-criar-paragrafo-module */ "criar-paragrafo-criar-paragrafo-module").then(__webpack_require__.bind(null, /*! ./criar-paragrafo/criar-paragrafo.module */ "./src/app/criar-paragrafo/criar-paragrafo.module.ts")).then(m => m.CriarParagrafoPageModule),
+        loadChildren: () => Promise.all(/*! import() | criar-paragrafo-criar-paragrafo-module */[__webpack_require__.e("common"), __webpack_require__.e("criar-paragrafo-criar-paragrafo-module")]).then(__webpack_require__.bind(null, /*! ./criar-paragrafo/criar-paragrafo.module */ "./src/app/criar-paragrafo/criar-paragrafo.module.ts")).then(m => m.CriarParagrafoPageModule),
         canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]]
     },
     {
@@ -555,15 +555,21 @@ let AppComponent = class AppComponent {
     initializeApp() {
         this.platform.ready().then(() => {
             this.statusBar.styleDefault();
-            this.splashScreen.hide();
-            this.authenticationService.authenticationState.subscribe(state => {
-                if (state) {
-                    this.router.navigate(['tabs', 'historias']);
-                }
-                else {
-                    this.router.navigate(['login']);
-                }
+            this.authenticationService.authenticationState.subscribe(checked => {
+                this.authenticationService.authenticationState.subscribe(state => {
+                    if (checked) {
+                        if (state) {
+                            console.log("AQUIII? 1");
+                            this.router.navigate(['tabs', 'historias']);
+                        }
+                        else {
+                            console.log("AQUIII? 2");
+                            this.router.navigate(['login']);
+                        }
+                    }
+                });
             });
+            //this.splashScreen.hide();
         });
     }
 };
@@ -665,6 +671,7 @@ let AuthGuard = class AuthGuard {
         this.auth = auth;
     }
     canActivate() {
+        console.log("chamou?" + this.auth.isAuthenticated());
         return this.auth.isAuthenticated();
     }
 };
@@ -711,6 +718,9 @@ let AuthenticationService = class AuthenticationService {
         this.plt = plt;
         this.http = http;
         this.authenticationState = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](false);
+        this.authenticationChecker = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](false);
+        this.userAuthenticated = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](null);
+        this.token = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"]('');
         this.plt.ready().then(() => {
             this.checkToken();
         });
@@ -718,34 +728,82 @@ let AuthenticationService = class AuthenticationService {
     checkToken() {
         this.storage.get(TOKEN_KEY).then(res => {
             if (res) {
+                this.token.next(res);
+                console.log("inserindo token --> " + this.token.value);
                 this.authenticationState.next(true);
+                this.storage.get('usuario').then(login => {
+                    this.userAuthenticated.next(login);
+                    this.authenticationChecker.next(true);
+                });
             }
         });
     }
-    login(login, senha) {
+    getToken() {
+        return this.token.value;
+    }
+    getUser() {
+        return this.userAuthenticated.value;
+    }
+    register(login, senha, nome) {
+        console.log(nome + login + senha);
         return new Promise((resolve, reject) => {
-            this.http.post('http://192.168.0.108/autenticar/', { login: login, senha: senha }, {}).then((response) => {
+            this.http.post('http://192.168.43.64/autenticar/novo/', { login: login, senha: senha, nome: nome }, {}).then((response) => {
                 if (response.status == 200) {
-                    response.data = JSON.parse(response.data);
-                    this.storage.set(TOKEN_KEY, 'Bearer ' + response.data.token).then(() => {
-                        this.authenticationState.next(true);
-                        resolve(true);
-                    });
-                    reject(false);
+                    console.log("Login criado com sucesso!");
+                    resolve(true);
                 }
                 else {
                     reject(false);
                 }
+            }).catch((rejection) => {
+                console.log(rejection);
+                console.log("Erro ao criar o login!");
+                reject(false);
+            });
+        });
+    }
+    login(login, senha) {
+        return new Promise((resolve, reject) => {
+            this.http.post('http://192.168.43.64/autenticar/', { login: login, senha: senha }, {}).then((response) => {
+                console.log(response);
+                if (response.status == 200) {
+                    response.data = JSON.parse(response.data);
+                    console.log(response.data);
+                    this.storage.set(TOKEN_KEY, 'Bearer ' + response.data.response).then(() => {
+                        console.log("Inserindo token--->" + response.data.response);
+                        this.authenticationState.next(true);
+                        this.storage.set('usuario', login).then((ok) => {
+                            this.userAuthenticated.next(login);
+                            resolve(true);
+                        });
+                    });
+                    reject(false);
+                }
+                else {
+                    console.log("REJEITADO!");
+                    console.log(JSON.stringify(response));
+                    reject(false);
+                }
+            }).catch(error => {
+                reject(null);
             });
         });
     }
     logout() {
-        return this.storage.remove(TOKEN_KEY).then(() => {
+        this.storage.remove(TOKEN_KEY).then(() => {
+            this.storage.remove('usuario').then((ok) => {
+                this.userAuthenticated.next(null);
+                console.log("Deslogando...?");
+            });
             this.authenticationState.next(false);
+            console.log("Deslogando...? 22");
         });
     }
     isAuthenticated() {
         return this.authenticationState.value;
+    }
+    authenticationStateChecked() {
+        return this.authenticationChecker.value;
     }
 };
 AuthenticationService.ctorParameters = () => [

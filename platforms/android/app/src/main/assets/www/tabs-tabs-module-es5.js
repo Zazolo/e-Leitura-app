@@ -40,18 +40,18 @@ var routes = [
                     {
                         path: '',
                         loadChildren: function () {
-                            return __webpack_require__.e(/*! import() | tabs-historias-historias-module */ "historias-historias-module").then(__webpack_require__.bind(null, /*! ../tabs/historias/historias.module */ "./src/app/tabs/historias/historias.module.ts")).then(function (m) { return m.HistoriasPageModule; });
+                            return Promise.all(/*! import() | tabs-historias-historias-module */[__webpack_require__.e("common"), __webpack_require__.e("historias-historias-module")]).then(__webpack_require__.bind(null, /*! ../tabs/historias/historias.module */ "./src/app/tabs/historias/historias.module.ts")).then(function (m) { return m.HistoriasPageModule; });
                         }
                     }
                 ]
             },
             {
-                path: 'buscar',
+                path: 'perfil',
                 children: [
                     {
                         path: '',
                         loadChildren: function () {
-                            return __webpack_require__.e(/*! import() | tabs-buscar-buscar-module */ "buscar-buscar-module").then(__webpack_require__.bind(null, /*! ../tabs/buscar/buscar.module */ "./src/app/tabs/buscar/buscar.module.ts")).then(function (m) { return m.BuscarPageModule; });
+                            return __webpack_require__.e(/*! import() | tabs-perfil-perfil-module */ "perfil-perfil-module").then(__webpack_require__.bind(null, /*! ../tabs/perfil/perfil.module */ "./src/app/tabs/perfil/perfil.module.ts")).then(function (m) { return m.PerfilPageModule; });
                         }
                     }
                 ]
@@ -76,16 +76,16 @@ var routes = [
     },
     {
         path: '',
-        redirectTo: '/tabs/historias',
+        redirectTo: '/login',
         pathMatch: 'full'
     },
     {
         path: 'historias',
-        loadChildren: function () { return __webpack_require__.e(/*! import() | historias-historias-module */ "historias-historias-module").then(__webpack_require__.bind(null, /*! ./historias/historias.module */ "./src/app/tabs/historias/historias.module.ts")).then(function (m) { return m.HistoriasPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | historias-historias-module */[__webpack_require__.e("common"), __webpack_require__.e("historias-historias-module")]).then(__webpack_require__.bind(null, /*! ./historias/historias.module */ "./src/app/tabs/historias/historias.module.ts")).then(function (m) { return m.HistoriasPageModule; }); }
     },
     {
-        path: 'buscar',
-        loadChildren: function () { return __webpack_require__.e(/*! import() | buscar-buscar-module */ "buscar-buscar-module").then(__webpack_require__.bind(null, /*! ./buscar/buscar.module */ "./src/app/tabs/buscar/buscar.module.ts")).then(function (m) { return m.BuscarPageModule; }); }
+        path: 'perfil',
+        loadChildren: function () { return __webpack_require__.e(/*! import() | perfil-perfil-module */ "perfil-perfil-module").then(__webpack_require__.bind(null, /*! ./perfil/perfil.module */ "./src/app/tabs/perfil/perfil.module.ts")).then(function (m) { return m.PerfilPageModule; }); }
     },
     {
         path: 'rank',

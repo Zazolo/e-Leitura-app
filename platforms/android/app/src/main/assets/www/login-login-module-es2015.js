@@ -115,14 +115,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
 /* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/authentication.service */ "./src/app/services/authentication.service.ts");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+
 
 
 
 
 let LoginPage = class LoginPage {
-    constructor(route, authService) {
+    constructor(route, authService, alertCtrl) {
         this.route = route;
         this.authService = authService;
+        this.alertCtrl = alertCtrl;
     }
     ngOnInit() {
     }
@@ -130,19 +133,27 @@ let LoginPage = class LoginPage {
         this.route.navigate(['/cadastro']);
     }
     logar() {
-        this.authService.login(this.login, this.senha).then((response) => {
-            if (response) {
-                alert("LOGADO!");
-            }
-            else {
-                alert("Nome de usuário ou senha incorreto!");
-            }
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
+            this.authService.login(this.login, this.senha).then((response) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
+                const alert = yield this.alertCtrl.create({
+                    message: "Seja bem-vindo!",
+                    buttons: ['Ok']
+                });
+                yield alert.present();
+            })).catch((error) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
+                const alert = yield this.alertCtrl.create({
+                    message: "Nome de usuário ou senha incorreto(s)!",
+                    buttons: ['Ok']
+                });
+                yield alert.present();
+            }));
         });
     }
 };
 LoginPage.ctorParameters = () => [
     { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] },
-    { type: _services_authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"] }
+    { type: _services_authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["AlertController"] }
 ];
 LoginPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -151,7 +162,8 @@ LoginPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         styles: [__webpack_require__(/*! ./login.page.scss */ "./src/app/login/login.page.scss")]
     }),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
-        _services_authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"]])
+        _services_authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"],
+        _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["AlertController"]])
 ], LoginPage);
 
 

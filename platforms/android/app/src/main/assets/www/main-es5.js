@@ -477,17 +477,17 @@ var routes = [
     },
     {
         path: 'criar-historia',
-        loadChildren: function () { return __webpack_require__.e(/*! import() | criar-historia-criar-historia-module */ "criar-historia-criar-historia-module").then(__webpack_require__.bind(null, /*! ./criar-historia/criar-historia.module */ "./src/app/criar-historia/criar-historia.module.ts")).then(function (m) { return m.CriarHistoriaPageModule; }); },
+        loadChildren: function () { return Promise.all(/*! import() | criar-historia-criar-historia-module */[__webpack_require__.e("common"), __webpack_require__.e("criar-historia-criar-historia-module")]).then(__webpack_require__.bind(null, /*! ./criar-historia/criar-historia.module */ "./src/app/criar-historia/criar-historia.module.ts")).then(function (m) { return m.CriarHistoriaPageModule; }); },
         canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]]
     },
     {
         path: 'ver-historia',
-        loadChildren: function () { return __webpack_require__.e(/*! import() | ver-historia-ver-historia-module */ "ver-historia-ver-historia-module").then(__webpack_require__.bind(null, /*! ./ver-historia/ver-historia.module */ "./src/app/ver-historia/ver-historia.module.ts")).then(function (m) { return m.VerHistoriaPageModule; }); },
+        loadChildren: function () { return Promise.all(/*! import() | ver-historia-ver-historia-module */[__webpack_require__.e("common"), __webpack_require__.e("ver-historia-ver-historia-module")]).then(__webpack_require__.bind(null, /*! ./ver-historia/ver-historia.module */ "./src/app/ver-historia/ver-historia.module.ts")).then(function (m) { return m.VerHistoriaPageModule; }); },
         canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]]
     },
     {
         path: 'criar-paragrafo',
-        loadChildren: function () { return __webpack_require__.e(/*! import() | criar-paragrafo-criar-paragrafo-module */ "criar-paragrafo-criar-paragrafo-module").then(__webpack_require__.bind(null, /*! ./criar-paragrafo/criar-paragrafo.module */ "./src/app/criar-paragrafo/criar-paragrafo.module.ts")).then(function (m) { return m.CriarParagrafoPageModule; }); },
+        loadChildren: function () { return Promise.all(/*! import() | criar-paragrafo-criar-paragrafo-module */[__webpack_require__.e("common"), __webpack_require__.e("criar-paragrafo-criar-paragrafo-module")]).then(__webpack_require__.bind(null, /*! ./criar-paragrafo/criar-paragrafo.module */ "./src/app/criar-paragrafo/criar-paragrafo.module.ts")).then(function (m) { return m.CriarParagrafoPageModule; }); },
         canActivate: [_guards_auth_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]]
     },
     {
@@ -565,15 +565,21 @@ var AppComponent = /** @class */ (function () {
         var _this = this;
         this.platform.ready().then(function () {
             _this.statusBar.styleDefault();
-            _this.splashScreen.hide();
-            _this.authenticationService.authenticationState.subscribe(function (state) {
-                if (state) {
-                    _this.router.navigate(['tabs', 'historias']);
-                }
-                else {
-                    _this.router.navigate(['login']);
-                }
+            _this.authenticationService.authenticationState.subscribe(function (checked) {
+                _this.authenticationService.authenticationState.subscribe(function (state) {
+                    if (checked) {
+                        if (state) {
+                            console.log("AQUIII? 1");
+                            _this.router.navigate(['tabs', 'historias']);
+                        }
+                        else {
+                            console.log("AQUIII? 2");
+                            _this.router.navigate(['login']);
+                        }
+                    }
+                });
             });
+            //this.splashScreen.hide();
         });
     };
     AppComponent.ctorParameters = function () { return [
@@ -679,6 +685,7 @@ var AuthGuard = /** @class */ (function () {
         this.auth = auth;
     }
     AuthGuard.prototype.canActivate = function () {
+        console.log("chamou?" + this.auth.isAuthenticated());
         return this.auth.isAuthenticated();
     };
     AuthGuard.ctorParameters = function () { return [
@@ -727,6 +734,9 @@ var AuthenticationService = /** @class */ (function () {
         this.plt = plt;
         this.http = http;
         this.authenticationState = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](false);
+        this.authenticationChecker = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](false);
+        this.userAuthenticated = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](null);
+        this.token = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"]('');
         this.plt.ready().then(function () {
             _this.checkToken();
         });
@@ -735,36 +745,85 @@ var AuthenticationService = /** @class */ (function () {
         var _this = this;
         this.storage.get(TOKEN_KEY).then(function (res) {
             if (res) {
+                _this.token.next(res);
+                console.log("inserindo token --> " + _this.token.value);
                 _this.authenticationState.next(true);
+                _this.storage.get('usuario').then(function (login) {
+                    _this.userAuthenticated.next(login);
+                    _this.authenticationChecker.next(true);
+                });
             }
+        });
+    };
+    AuthenticationService.prototype.getToken = function () {
+        return this.token.value;
+    };
+    AuthenticationService.prototype.getUser = function () {
+        return this.userAuthenticated.value;
+    };
+    AuthenticationService.prototype.register = function (login, senha, nome) {
+        var _this = this;
+        console.log(nome + login + senha);
+        return new Promise(function (resolve, reject) {
+            _this.http.post('http://192.168.43.64/autenticar/novo/', { login: login, senha: senha, nome: nome }, {}).then(function (response) {
+                if (response.status == 200) {
+                    console.log("Login criado com sucesso!");
+                    resolve(true);
+                }
+                else {
+                    reject(false);
+                }
+            }).catch(function (rejection) {
+                console.log(rejection);
+                console.log("Erro ao criar o login!");
+                reject(false);
+            });
         });
     };
     AuthenticationService.prototype.login = function (login, senha) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.http.post('http://192.168.0.108/autenticar/', { login: login, senha: senha }, {}).then(function (response) {
+            _this.http.post('http://192.168.43.64/autenticar/', { login: login, senha: senha }, {}).then(function (response) {
+                console.log(response);
                 if (response.status == 200) {
                     response.data = JSON.parse(response.data);
-                    _this.storage.set(TOKEN_KEY, 'Bearer ' + response.data.token).then(function () {
+                    console.log(response.data);
+                    _this.storage.set(TOKEN_KEY, 'Bearer ' + response.data.response).then(function () {
+                        console.log("Inserindo token--->" + response.data.response);
                         _this.authenticationState.next(true);
-                        resolve(true);
+                        _this.storage.set('usuario', login).then(function (ok) {
+                            _this.userAuthenticated.next(login);
+                            resolve(true);
+                        });
                     });
                     reject(false);
                 }
                 else {
+                    console.log("REJEITADO!");
+                    console.log(JSON.stringify(response));
                     reject(false);
                 }
+            }).catch(function (error) {
+                reject(null);
             });
         });
     };
     AuthenticationService.prototype.logout = function () {
         var _this = this;
-        return this.storage.remove(TOKEN_KEY).then(function () {
+        this.storage.remove(TOKEN_KEY).then(function () {
+            _this.storage.remove('usuario').then(function (ok) {
+                _this.userAuthenticated.next(null);
+                console.log("Deslogando...?");
+            });
             _this.authenticationState.next(false);
+            console.log("Deslogando...? 22");
         });
     };
     AuthenticationService.prototype.isAuthenticated = function () {
         return this.authenticationState.value;
+    };
+    AuthenticationService.prototype.authenticationStateChecked = function () {
+        return this.authenticationChecker.value;
     };
     AuthenticationService.ctorParameters = function () { return [
         { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"] },

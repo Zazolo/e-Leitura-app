@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar>\n    <ion-title>criar-historia</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n\n</ion-content>\n"
+module.exports = "<ion-header class=\"ion-no-border\">\n  <ion-toolbar>\n    <ion-buttons slot=\"start\" *ngIf=\"stage > 0\">\n      <ion-button (click)=\"recuarStage()\">Voltar</ion-button>\n    </ion-buttons>\n    <ion-title>Nova História</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"stage <= 1\">\n      <ion-button (click)=\"avancarStage()\">Avançar</ion-button>\n    </ion-buttons>\n    <ion-buttons slot=\"end\" *ngIf=\"stage == 2\">\n      <ion-button (click)=\"publicar()\">Publicar</ion-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content *ngIf=\"stage == 0\">\n  <ion-textarea [(ngModel)]=\"texto\" placeholder=\"Digite o primeiro paragrafo da História...\" maxLength=\"500\" rows=\"30\" wrap=\"soft\" autofocus></ion-textarea>\n</ion-content>\n\n<ion-content *ngIf=\"stage == 1\">\n  <ion-list>\n    <ion-item>\n      <ion-label position=\"floating\">Titulo para a História</ion-label>\n      <ion-input type=\"text\" [(ngModel)]=\"titulo\"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label position=\"floating\">Quantidade de ciclos</ion-label>\n      <ion-input type=\"number\" [(ngModel)]=\"quantidade_ciclos\" min=\"1\" max=\"1080\"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label position=\"floating\">Tempo de cada ciclo</ion-label>\n      <ion-input type=\"number\" [(ngModel)]=\"tempo_ciclo\" min=\"1\" max=\"60\"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label position=\"floating\">Senha de acesso</ion-label>\n      <ion-input type=\"text\" [(ngModel)]=\"senha\" minLength=\"3\"></ion-input>\n    </ion-item>\n  </ion-list>\n</ion-content>\n\n<ion-content *ngIf=\"stage == 2\">\n  <ion-grid>\n    <ion-row>\n      <h1>Resumo da história</h1>\n    </ion-row>\n    <ion-row>\n      <ion-label>Título: {{titulo}}</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-label>Quantidade de ciclos: {{quantidade_ciclos}}</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-label>Tempo de cada ciclo: {{tempo_ciclo}}</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-label>Tempo total estimado: {{quantidade_ciclos * tempo_ciclo}} minutos.</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-label>Senha para acesso: {{senha?senha:\"nenhuma\"}}.</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-label>E a história começa...</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-text>{{texto}}</ion-text>\n    </ion-row>\n  </ion-grid>\n</ion-content>\n"
 
 /***/ }),
 
@@ -119,20 +119,67 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CriarHistoriaPage", function() { return CriarHistoriaPage; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_historia_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/historia.service */ "./src/app/services/historia.service.ts");
+
+
 
 
 var CriarHistoriaPage = /** @class */ (function () {
-    function CriarHistoriaPage() {
+    function CriarHistoriaPage(route, hist) {
+        this.route = route;
+        this.hist = hist;
+        this.stage = 0;
+        this.texto = '';
+        this.titulo = '';
+        this.senha = '';
+        this.quantidade_ciclos = 1;
+        this.tempo_ciclo = 1;
     }
-    CriarHistoriaPage.prototype.ngOnInit = function () {
+    CriarHistoriaPage.prototype.avancarStage = function () {
+        this.stage++;
+        switch (this.stage) {
+            case 1:
+                if (this.texto.length < 15) {
+                    alert("Texto inválido! Digite ao menos 15 caracteres!");
+                    this.recuarStage();
+                }
+                break;
+            case 2:
+                if (this.titulo.length < 5) {
+                    alert("Título inválido! Digite ao menos 5 caracteres!");
+                    this.recuarStage();
+                }
+                break;
+        }
     };
+    CriarHistoriaPage.prototype.recuarStage = function () {
+        this.stage--;
+    };
+    CriarHistoriaPage.prototype.publicar = function () {
+        var _this = this;
+        this.hist.criarHistoria(this.texto, this.titulo, this.tempo_ciclo, this.quantidade_ciclos, this.senha).then(function (ok) {
+            _this.route.navigate(['historias']);
+        }).catch(function (e) {
+            console.log(e);
+            alert("Erro ao criar a historia!");
+        });
+    };
+    CriarHistoriaPage.prototype.ngOnInit = function () {
+        this.stage = 0;
+    };
+    CriarHistoriaPage.ctorParameters = function () { return [
+        { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] },
+        { type: _services_historia_service__WEBPACK_IMPORTED_MODULE_3__["HistoriaService"] }
+    ]; };
     CriarHistoriaPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-criar-historia',
             template: __webpack_require__(/*! raw-loader!./criar-historia.page.html */ "./node_modules/raw-loader/index.js!./src/app/criar-historia/criar-historia.page.html"),
             styles: [__webpack_require__(/*! ./criar-historia.page.scss */ "./src/app/criar-historia/criar-historia.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _services_historia_service__WEBPACK_IMPORTED_MODULE_3__["HistoriaService"]])
     ], CriarHistoriaPage);
     return CriarHistoriaPage;
 }());

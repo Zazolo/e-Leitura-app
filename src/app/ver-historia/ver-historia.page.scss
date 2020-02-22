@@ -1,0 +1,54 @@
+.criadoPor{
+    font-size: small;
+    margin: 5px;
+    width: 100%;
+    text-align: center;
+}
+
+.titulo{
+    font-size: 25px;
+    width: 100%;
+    font-family: 'Times New Roman', Times, serif;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.texto{
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 8px;
+    text-align: justify;
+    text-indent: 1.5em;
+    width: 100%;
+    font-size: 16px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.mini{
+    font-size: 12px;
+}
+
+.previewContainer{
+    margin: 15px;
+    text-align: justify;
+    
+}
+
+
+ion-row{
+    width: 100%;
+}
+
+.voteInfoHeader{
+    font-size: small;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    margin-left: 8px;
+}
+ion-card{
+    width: 100%!important;
+    ion-button{
+        margin-top: 10px;
+        width: 100%!important;
+    }
+}

@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class HistoriasPage implements OnInit {
 
-  private historias:Array<historiaAll> = undefined;
+  private historias = undefined;
   constructor(private auth:AuthenticationService, private hist:HistoriaService,
     private alertCtrl:AlertController, private route:Router, 
     private toasCtrl:ToastController) { }
@@ -22,7 +22,7 @@ export class HistoriasPage implements OnInit {
       this.historias = response;
       console.log(response);
     }).catch(error => {
-      alert("Erro ao obter as histórias!");
+      console.log("Erro ou nenhuma historia disponível");
     })
   }
   
@@ -104,6 +104,18 @@ export class HistoriasPage implements OnInit {
 
   criar(){
     this.route.navigateByUrl('/criar-historia');
+  }
+
+  verRank(idHistoria){
+    this.hist.getRankHistoria(idHistoria).then((rank:Array<{id:string, nome:string, login:string, total:number}>) => {
+      for(let i=0; i<this.historias.length; i++){
+        if(this.historias[i].id == idHistoria){
+          this.historias[i].rank = rank;
+        }
+      }
+    }).catch(error => {
+      console.log("Erro ao obter o rank");
+    })
   }
 
 }

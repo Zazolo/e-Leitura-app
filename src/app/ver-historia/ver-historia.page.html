@@ -1,24 +1,21 @@
 <ion-content *ngIf="historia != null">
   <ion-grid>
     <ion-row>
-      <ion-label>Criador por {{historia.usuario_id.nome}}</ion-label>
+      <ion-label class="criadoPor">{{historia.usuario_id.nome}}, autor inicial.</ion-label>
     </ion-row>
 
     <ion-row>
-      <ion-text>{{historia.titulo}}</ion-text>
+      <ion-text class="titulo">{{historia.titulo}}</ion-text>
     </ion-row>
 
     <ion-row>
-      <ion-label>{{historia.texto}}</ion-label>
+      <ion-label class="texto">{{historia.texto}}</ion-label>
     </ion-row>
 
     <div *ngFor="let p of historia.paragrafos">
-      <div *ngIf="p.ciclo != historia.ciclo_atual">
-        <ion-row>
-          <ion-label>Trecho produzido por: {{p.usuario_id.nome}}</ion-label>
-        </ion-row>
-        <ion-row>
-          <ion-text>{{p.texto}}</ion-text>
+      <div *ngIf="p.ciclo != historia.ciclo_atual && p.ganhador == 1">
+        <ion-row class="previewContainer">
+          <ion-text class="texto">{{p.texto}}<div class="mini">({{p.usuario_id.login}})</div></ion-text>
         </ion-row>
       </div>
     </div>
@@ -26,18 +23,15 @@
 
     <div *ngIf="historia.paragrafos.length > 0">
       <div *ngFor="let p of historia.paragrafos">
-        <ion-row *ngIf="p.ciclo == historia.ciclo_atual">
+        <ion-row *ngIf="p.ciclo == historia.ciclo_atual && historia.finalizada == 0">
           <ion-card>
             <ion-grid>
-              <ion-row>
-                <h4>Vote no paragrafo de {{p.usuario_id.nome}}</h4>
-              </ion-row>
-              <ion-row>
-                <ion-label>Trecho produzido por: {{p.usuario_id.nome}}</ion-label>
+              <ion-row class="voteInfoHeader">
+                <ion-label class="mini">Trecho produzido por: {{p.usuario_id.nome}}</ion-label>
               </ion-row>
       
               <ion-row>
-                <ion-text>{{p.texto}}</ion-text>
+                <ion-text class="texto mini">{{p.texto}}</ion-text>
               </ion-row>
               <ion-row>
                 <ion-col *ngIf="p.votou == false && p.usuario_id.login != usuarioLogadoLogin">
@@ -59,9 +53,15 @@
 
   </ion-grid>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="historia.finalizada == 0">
     <ion-fab-button (click)="criarParagrafo()">
       <ion-icon name="text"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="historia.usuario_id.login == usuarioLogadoLogin && historia.finalizada == 0">
+    <ion-fab-button (click)="finalizarHistoria()">
+      Finalizar
     </ion-fab-button>
   </ion-fab>
 

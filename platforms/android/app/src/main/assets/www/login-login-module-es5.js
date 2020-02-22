@@ -121,14 +121,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/authentication.service */ "./src/app/services/authentication.service.ts");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+
 
 
 
 
 var LoginPage = /** @class */ (function () {
-    function LoginPage(route, authService) {
+    function LoginPage(route, authService, alertCtrl) {
         this.route = route;
         this.authService = authService;
+        this.alertCtrl = alertCtrl;
     }
     LoginPage.prototype.ngOnInit = function () {
     };
@@ -136,18 +139,50 @@ var LoginPage = /** @class */ (function () {
         this.route.navigate(['/cadastro']);
     };
     LoginPage.prototype.logar = function () {
-        this.authService.login(this.login, this.senha).then(function (response) {
-            if (response) {
-                alert("LOGADO!");
-            }
-            else {
-                alert("Nome de usuário ou senha incorreto!");
-            }
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                this.authService.login(this.login, this.senha).then(function (response) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                    var alert;
+                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, this.alertCtrl.create({
+                                    message: "Seja bem-vindo!",
+                                    buttons: ['Ok']
+                                })];
+                            case 1:
+                                alert = _a.sent();
+                                return [4 /*yield*/, alert.present()];
+                            case 2:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }).catch(function (error) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                    var alert;
+                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, this.alertCtrl.create({
+                                    message: "Nome de usuário ou senha incorreto(s)!",
+                                    buttons: ['Ok']
+                                })];
+                            case 1:
+                                alert = _a.sent();
+                                return [4 /*yield*/, alert.present()];
+                            case 2:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
+            });
         });
     };
     LoginPage.ctorParameters = function () { return [
         { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] },
-        { type: _services_authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"] }
+        { type: _services_authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"] },
+        { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["AlertController"] }
     ]; };
     LoginPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -156,7 +191,8 @@ var LoginPage = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./login.page.scss */ "./src/app/login/login.page.scss")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
-            _services_authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"]])
+            _services_authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["AlertController"]])
     ], LoginPage);
     return LoginPage;
 }());

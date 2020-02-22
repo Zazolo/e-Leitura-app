@@ -34,7 +34,7 @@ export class VerHistoriaPage implements OnInit {
       this.usuarioLogadoLogin = this.auth.getUser();
       console.log(this.usuarioLogadoLogin);
       this.obterHistoria();
-    }, 10000);
+    }, 3000);
       
    
   }
@@ -79,4 +79,12 @@ export class VerHistoriaPage implements OnInit {
     })
   }
 
+  finalizarHistoria(){
+    this.historiaService.finalizarHistoria(this.historia.id).then(finalizou => {
+      alert("Historia finalizada com sucesso!");
+      this.route.navigate(['tabs', 'historia']);
+    }).catch(error => {
+      alert("Erro ao finalizar a historia!");
+    })
+  }
 }

@@ -401,6 +401,154 @@ var findCheckedOption = function (el, tagName) {
 
 
 
+/***/ }),
+
+/***/ "./src/app/services/historia.service.ts":
+/*!**********************************************!*\
+  !*** ./src/app/services/historia.service.ts ***!
+  \**********************************************/
+/*! exports provided: HistoriaService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HistoriaService", function() { return HistoriaService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ionic_native_http_ngx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic-native/http/ngx */ "./node_modules/@ionic-native/http/ngx/index.js");
+/* harmony import */ var _authentication_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./authentication.service */ "./src/app/services/authentication.service.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+
+
+var HistoriaService = /** @class */ (function () {
+    function HistoriaService(http, auth) {
+        this.http = http;
+        this.auth = auth;
+        this.lastHistoriaLoaded = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
+    }
+    HistoriaService.prototype.getLast = function () {
+        return this.lastHistoriaLoaded.value;
+    };
+    HistoriaService.prototype.obterDisponiveis = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var token = _this.auth.getToken();
+            console.log("token --> " + token);
+            _this.http.get("http://192.168.43.64/historia/all/", {}, { authentication: token }).then(function (response) {
+                resolve(JSON.parse(response.data));
+            }).catch(function (error) {
+                console.log("Ocorreu algum erro ao obter TODAS as HISTORIAS.");
+                console.log(error);
+                reject(null);
+            });
+        });
+    };
+    HistoriaService.prototype.getIt = function (id, senha) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.get("http://192.168.43.64/historia/" + id, { senha: senha }, { authentication: _this.auth.getToken() }).then(function (response) {
+                _this.lastHistoriaLoaded.next(JSON.parse(response.data));
+                resolve(_this.lastHistoriaLoaded.value);
+            });
+        });
+    };
+    HistoriaService.prototype.votar = function (idParagrafo) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.put("http://192.168.43.64/paragrafo/" + idParagrafo + "/votar/", {}, { authentication: _this.auth.getToken() }).then(function (response) {
+                resolve(true);
+            }).catch(function (error) {
+                console.log("Erro ao votar <<<<<<<<<<<<<");
+                console.log(error);
+                reject(false);
+            });
+        });
+    };
+    HistoriaService.prototype.removerParagrafo = function (id) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.delete("http://192.168.43.64/paragrafo/" + id, {}, { authentication: _this.auth.getToken() }).then(function (response) {
+                resolve(true);
+            }).catch(function (error) {
+                console.log("Erro ao remover <<<<<<<<<<<<<");
+                console.log(error);
+                reject(false);
+            });
+        });
+    };
+    HistoriaService.prototype.criarParagrafo = function (texto, historia_id) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.post("http://192.168.43.64/paragrafo/", { texto: texto, historia_id: historia_id }, { authentication: _this.auth.getToken() }).then(function (response) {
+                resolve(true);
+            }).catch(function (error) {
+                console.log("Erro ao criar o parágrafo <<<<<<<<<<<<<");
+                console.log(error);
+                reject(false);
+            });
+        });
+    };
+    HistoriaService.prototype.criarHistoria = function (texto, titulo, tempo_ciclo, quantidade_ciclo, senha) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            if (senha == '') {
+                senha = null;
+            }
+            _this.http.post("http://192.168.43.64/historia/", { texto: texto, titulo: titulo, max_ciclos: quantidade_ciclo, tempo_ciclo: tempo_ciclo, senha: senha }, { authentication: _this.auth.getToken() }).then(function (response) {
+                resolve(true);
+            }).catch(function (error) {
+                console.log("Erro ao criar a história <<<<<<<<<<<<<");
+                console.log(error);
+                reject(false);
+            });
+        });
+    };
+    HistoriaService.prototype.finalizarHistoria = function (idHistoria) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.put("http://192.168.43.64/historia/" + idHistoria + "/finalize/", {}, { authentication: _this.auth.getToken() }).then(function (response) {
+                resolve(true);
+            }).catch(function (error) {
+                console.log("Erro ao finalizar a historia!");
+                console.log(error);
+                reject(false);
+            });
+        });
+    };
+    HistoriaService.prototype.getRankHistoria = function (idHistoria) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.get("http://192.168.43.64/historia/" + idHistoria + "/rank/", {}, { authentication: _this.auth.getToken() }).then(function (response) {
+                if (response.data != undefined) {
+                    resolve(JSON.parse(response.data));
+                }
+                resolve(false);
+            }).catch(function (error) {
+                console.log("Erro ao obter o rank da historia!");
+                console.log(error);
+                reject(false);
+            });
+        });
+    };
+    HistoriaService.ctorParameters = function () { return [
+        { type: _ionic_native_http_ngx__WEBPACK_IMPORTED_MODULE_2__["HTTP"] },
+        { type: _authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"] }
+    ]; };
+    HistoriaService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_native_http_ngx__WEBPACK_IMPORTED_MODULE_2__["HTTP"],
+            _authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"]])
+    ], HistoriaService);
+    return HistoriaService;
+}());
+
+
+
 /***/ })
 
 }]);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,8 @@ export class LoginPage implements OnInit {
   
   constructor(
     private route:Router,
-    private authService:AuthenticationService
+    private authService:AuthenticationService,
+    private alertCtrl:AlertController
   ) { }
 
   ngOnInit() {
@@ -24,13 +26,20 @@ export class LoginPage implements OnInit {
     this.route.navigate(['/cadastro']);
   }
 
-  logar(){
-    this.authService.login(this.login, this.senha).then((response) => {
-      if(response){
-        alert("LOGADO!");
-      } else {
-        alert("Nome de usuário ou senha incorreto!");
-      }
+  async logar(){
+    this.authService.login(this.login, this.senha).then(async (response) => {
+      const alert = await this.alertCtrl.create({
+        message: "Seja bem-vindo!",
+        buttons: ['Ok']
+      });
+      await alert.present();
+
+    }).catch(async error => {
+      const alert = await this.alertCtrl.create({
+        message: "Nome de usuário ou senha incorreto(s)!",
+        buttons: ['Ok']
+      });
+      await alert.present();
     })
   }
 

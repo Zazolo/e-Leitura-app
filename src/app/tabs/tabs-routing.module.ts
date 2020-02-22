@@ -18,12 +18,12 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'buscar',
+        path: 'perfil',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../tabs/buscar/buscar.module').then(m => m.BuscarPageModule)
+              import('../tabs/perfil/perfil.module').then(m => m.PerfilPageModule)
           }
         ]
       },
@@ -46,7 +46,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/tabs/historias',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
   {
@@ -54,8 +54,8 @@ const routes: Routes = [
     loadChildren: () => import('./historias/historias.module').then( m => m.HistoriasPageModule)
   },
   {
-    path: 'buscar',
-    loadChildren: () => import('./buscar/buscar.module').then( m => m.BuscarPageModule)
+    path: 'perfil',
+    loadChildren: () => import('./perfil/perfil.module').then( m => m.PerfilPageModule)
   },
   {
     path: 'rank',
