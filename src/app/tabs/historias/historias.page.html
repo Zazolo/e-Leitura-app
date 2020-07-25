@@ -12,27 +12,24 @@
       <ion-card>
         <div class="topCardContainer">
           <ion-row>
-            <ion-text class="nome">{{h.usuario_id.nome}}</ion-text>
+            <ion-text class="nome">{{h.criador.nome}}</ion-text>
           </ion-row>
           <ion-row>
-            <ion-text class="login">@{{h.usuario_id.login}}</ion-text>
+            <ion-text class="login">@{{h.criador.login}}</ion-text>
           </ion-row>
         </div>
         <ion-row>
           <ion-text class="titulo">{{h.titulo}}</ion-text>
         </ion-row>
         <ion-row>
-          <ion-col *ngIf="h.finalizada == false">
+          <ion-col *ngIf="h.encerrada == false">
             <ion-button size="small" (click)="participar(h.id);">Participar</ion-button>
           </ion-col>
-          <ion-col *ngIf="h.finalizada == true && h.rank == undefined">
-            <ion-button size="small" (click)="verRank(h.id);">Ver Rank</ion-button>
-          </ion-col>
-          <ion-col *ngIf="h.finalizada == true">
+          <ion-col *ngIf="h.encerrada == true">
             <ion-button size="small" (click)="participar(h.id);">Ler história</ion-button>
           </ion-col>
           <ion-col>
-            <ion-text>Ciclo atual: {{h.ciclo_atual}}\{{h.max_ciclos}}</ion-text>
+            <ion-text>Ciclo atual: {{h.ciclo_atual}}\{{h.total_ciclos}}</ion-text>
           </ion-col>
           
         </ion-row>

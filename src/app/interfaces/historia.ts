@@ -1,15 +1,16 @@
 export interface Historia {
     id: number,
     titulo: string,
-    max_ciclos: number,
+    total_ciclos: number,
     ciclo_atual: number,
     tempo_ciclo: number,
-    finalizada: number,
-    senha: number,
-    usuario_id: {
+    encerrada: boolean,
+    senha?: number,
+    criador: {
         id: number,
         nome: string,
-        login: string
+        login: string,
+        pontos: number
     },
     dthr_criacao: string,
     paragrafos: [
@@ -17,13 +18,12 @@ export interface Historia {
             id: number,
             texto: string,
             ciclo: number,
-            usuario_id: {
+            criador: {
                 id: number,
                 nome: string,
                 login: string
             },
-            historia_id: number,
-            votou: boolean
+            sala: number
         }
     ]
 }

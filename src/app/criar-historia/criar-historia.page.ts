@@ -48,7 +48,8 @@ export class CriarHistoriaPage implements OnInit {
 
   publicar(){
     this.hist.criarHistoria(this.texto, this.titulo, this.tempo_ciclo, this.quantidade_ciclos, this.senha).then((ok) => {
-      this.route.navigate(['historias']);
+      this.route.navigate(['/historias']);
+      alert("História Criada com sucesso!");
     }).catch(e => {
       console.log(e);
       alert("Erro ao criar a historia!");

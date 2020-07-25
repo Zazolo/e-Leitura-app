@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { BehaviorSubject } from 'rxjs';
 import { Platform } from '@ionic/angular';
-import { HTTP, HTTPResponse } from '@ionic-native/http/ngx';
+import { HttpClient, HttpHeaders, HttpRequest} from '@angular/common/http';
 import { resolve } from 'url';
 import { Usuario } from '../interfaces/usuario';
 
@@ -19,7 +19,9 @@ export class AuthenticationService {
   userAuthenticated = new BehaviorSubject(null);
   token = new BehaviorSubject('');
 
-  constructor(private storage: Storage, private plt: Platform, private http: HTTP) { 
+  private masterURL:string = "http://localhost:2424";
+
+  constructor(private storage: Storage, private plt: Platform, private http: HttpClient) { 
     this.plt.ready().then(() => {
       this.checkToken();
     });
@@ -50,52 +52,54 @@ export class AuthenticationService {
   register(login:string, senha:string, nome:string){
     console.log(nome + login + senha);
     return new Promise((resolve, reject) => {
-      this.http.post('http://192.168.43.64/autenticar/novo/', {login:login, senha:senha, nome:nome}, {}).then((response) => {
-        if(response.status == 200){
-          console.log("Login criado com sucesso!");
-          resolve(true);
-        } else {
-          
-          reject(false);
-        }
-      }).catch((rejection) => {
-        console.log(rejection);
-        console.log("Erro ao criar o login!");
-        reject(false);
-      })
+      let post = {login:login, senha:senha, nome:nome};
+      var headers = new HttpHeaders().set('content-type', 'application/json');
+      this.http.post(this.masterURL + "/autenticacao/novo/", post, {headers})
+        .subscribe(data => {
+          console.log(data);
+          resolve(data);
+        }, error => {
+          console.log(error);
+        });
     });
   }
 
+  
   login(login:string, senha:string):Promise<boolean> {
     return new Promise((resolve, reject) => {
-      this.http.post('http://192.168.43.64/autenticar/', {login:login, senha:senha}, {}).then((response)=>{
-        console.log(response);
-        if(response.status == 200) {
-          response.data = JSON.parse(response.data);
-          console.log(response.data);
-          this.storage.set(TOKEN_KEY, 'Bearer ' + response.data.response).then(() => {
-            console.log("Inserindo token--->" + response.data.response);
-            this.authenticationState.next(true);
-            this.storage.set('usuario', login).then((ok) => {
-              this.userAuthenticated.next(login);
-              resolve(true);
-            })
-          });
-          reject(false);
-        } else {
-          console.log("REJEITADO!");
-          console.log(JSON.stringify(response));
-          reject(false)
-        }
-      }).catch(error => {
-        reject(null);
-      });  
+      let post = {login:login, senha:senha};
+      var headers = new HttpHeaders().set('content-type', 'application/json');
+      this.http.post(this.masterURL + "/autenticacao/", post, {headers})
+        .subscribe(response => {
+          console.log(response);
+
+          if(response != null) {
+            let parsed_response:any = response;
+            console.log(parsed_response);
+            this.storage.set(TOKEN_KEY, parsed_response.token).then(() => {
+              console.log("Inserindo token--->" + parsed_response.token);
+              this.authenticationState.next(true);
+              this.storage.set('usuario', login).then((ok) => {
+                this.userAuthenticated.next(login);
+                resolve(true);
+              })
+            });
+            reject(false);
+          } else {
+            console.log("REJEITADO!");
+            reject(false)
+          }
+
+        }, error => {
+          console.log(error);
+        });
+      
     })
     
     
   }
  
-  logout() {
+  logout() {/*
     this.storage.remove(TOKEN_KEY).then(() => {
       this.storage.remove('usuario').then((ok) => {
         this.userAuthenticated.next(null);
@@ -103,7 +107,7 @@ export class AuthenticationService {
       });
       this.authenticationState.next(false);
       console.log("Deslogando...? 22")
-    });
+    });*/
   }
  
   isAuthenticated() {
@@ -114,4 +118,5 @@ export class AuthenticationService {
     return this.authenticationChecker.value;
   }
 
+  
 }
