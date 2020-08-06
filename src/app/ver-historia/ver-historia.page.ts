@@ -48,7 +48,9 @@ export class VerHistoriaPage implements OnInit {
       let i = 0;
       for(i = 0; i < this.historia.paragrafos.length; i++){
         if(this.historia.paragrafos[i].id == id){
-          this.historia.paragrafos[i].votou = true;
+          this.historia.paragrafos[i] = {...this.historia.paragrafos[i], ...{votou:true}};
+        } else {
+          this.historia.paragrafos[i] = {...this.historia.paragrafos[i], ...{votou:false}};
         }
       }
       this.historiaService.votar(id).then((ok) => {

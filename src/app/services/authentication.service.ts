@@ -19,7 +19,7 @@ export class AuthenticationService {
   userAuthenticated = new BehaviorSubject(null);
   token = new BehaviorSubject('');
 
-  private masterURL:string = "http://localhost:2424";
+  private masterURL:string = "http://eleitura.nie.iff.edu.br:2424";
 
   constructor(private storage: Storage, private plt: Platform, private http: HttpClient) { 
     this.plt.ready().then(() => {

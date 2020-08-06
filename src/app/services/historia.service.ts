@@ -9,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class HistoriaService {
 
-  private masterURL:string = "http://localhost:2424";
+  private masterURL:string = "http://eleitura.nie.iff.edu.br:2424";
 
   private lastHistoriaLoaded = new BehaviorSubject(null);
   constructor(
