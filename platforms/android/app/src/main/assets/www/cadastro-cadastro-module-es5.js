@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-content>\n  <form  #form=\"ngForm\" (ngSubmit)=\"register(form.value)\">\n    <ion-grid>\n      <ion-row justify-content-center>\n        <ion-col align-self-center size-md=\"6\" size-lg=\"5\" size-xs=\"12\">\n          <div text-center>\n            <h3>Criar conta!</h3>\n          </div>\n          <div padding>\n            <ion-item>\n              <ion-input  name=\"nome\" type=\"text\" placeholder=\"Name\" ngModel required></ion-input>\n            </ion-item>\n            <ion-item>\n              <ion-input name=\"login\" type=\"text\" placeholder=\"login\" ngModel required></ion-input>\n            </ion-item>\n            <ion-item>\n              <ion-input name=\"senha\" type=\"password\" placeholder=\"Senha\" ngModel required></ion-input>\n            </ion-item>\n            <ion-item>\n              <ion-input name=\"confirm\" type=\"password\" placeholder=\"Confirmar senha\" ngModel required></ion-input>\n            </ion-item>\n          </div>\n          <div padding>\n            <ion-button  size=\"default\" type=\"submit\" [disabled]=\"form.invalid && senha == confirm\" expand=\"block\">Registrar</ion-button>\n          </div>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n"
+module.exports = "<ion-content>\r\n  <form  #form=\"ngForm\" (ngSubmit)=\"register(form.value)\">\r\n    <ion-grid>\r\n      <ion-row justify-content-center>\r\n        <ion-col align-self-center size-md=\"6\" size-lg=\"5\" size-xs=\"12\">\r\n          <div text-center>\r\n            <h3>Criar conta!</h3>\r\n          </div>\r\n          <div padding>\r\n            <ion-item>\r\n              <ion-input  name=\"nome\" type=\"text\" placeholder=\"Name\" ngModel required></ion-input>\r\n            </ion-item>\r\n            <ion-item>\r\n              <ion-input name=\"login\" type=\"text\" placeholder=\"login\" ngModel required></ion-input>\r\n            </ion-item>\r\n            <ion-item>\r\n              <ion-input name=\"senha\" type=\"password\" placeholder=\"Senha\" ngModel required></ion-input>\r\n            </ion-item>\r\n            <ion-item>\r\n              <ion-input name=\"confirm\" type=\"password\" placeholder=\"Confirmar senha\" ngModel required></ion-input>\r\n            </ion-item>\r\n          </div>\r\n          <div padding>\r\n            <ion-button  size=\"default\" type=\"submit\" [disabled]=\"form.invalid && senha == confirm\" expand=\"block\">Registrar</ion-button>\r\n          </div>\r\n        </ion-col>\r\n      </ion-row>\r\n    </ion-grid>\r\n  </form>\r\n</ion-content>\r\n"
 
 /***/ }),
 
@@ -132,6 +132,8 @@ var CadastroPage = /** @class */ (function () {
         this.auth = auth;
         this.route = route;
         this.alertCtrl = alertCtrl;
+        this.senha = '';
+        this.confirm = '';
     }
     CadastroPage.prototype.register = function (values) {
         var _this = this;

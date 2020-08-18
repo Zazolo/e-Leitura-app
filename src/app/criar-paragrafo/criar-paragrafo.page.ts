@@ -9,7 +9,7 @@ import { HistoriaService } from '../services/historia.service';
 })
 export class CriarParagrafoPage implements OnInit {
 
-  private texto:string;
+  public texto:string;
   constructor(
     private route:Router,
     private historiaService:HistoriaService
@@ -21,10 +21,11 @@ export class CriarParagrafoPage implements OnInit {
   criar(){
     if(this.texto.length > 5){
       let lastHistoria = this.historiaService.getLast();
-      this.historiaService.criarParagrafo(this.texto, lastHistoria.id).then((ok) => {
-        this.route.navigateByUrl('/ver-historia');
+      this.historiaService.criarParagrafo(this.texto, lastHistoria.id, lastHistoria.ciclo_atual).then((ok) => {
         this.historiaService.getIt(lastHistoria.id, lastHistoria.senha);
-      }).catch(fail => {
+        this.route.navigateByUrl('/ver-historia');
+      }).catch((fail) => {
+        console.log(fail);
         alert("Ocorreu um erro ao tentar postar! Tente novamente mais tarde!");
       })
     } else {

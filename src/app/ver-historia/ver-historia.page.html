@@ -12,18 +12,19 @@
       <ion-label class="texto">{{historia.paragrafo}}</ion-label>
     </ion-row>
 
-    <div *ngFor="let p of historia.paragrafos">
-      <div *ngIf="p.ciclo != historia.ciclo_atual && p.ganhador == 1">
-        <ion-row class="previewContainer">
-          <ion-text class="texto">{{p.texto}}<div class="mini">({{p.criador.login}})</div></ion-text>
-        </ion-row>
+    <div *ngIf="historia.paragrafos">
+      <div *ngFor="let p of historia.paragrafos">
+        <div *ngIf="p.ciclo != historia.ciclo_atual && p.ganhador == 1">
+          <ion-row class="previewContainer">
+            <ion-text class="texto">{{p.texto}}<div class="mini">({{p.criador.login}})</div></ion-text>
+          </ion-row>
+        </div>
       </div>
     </div>
 
-
-    <div *ngIf="historia.paragrafos.length > 0">
-      <div *ngFor="let p of historia.paragrafos">
-        <ion-row *ngIf="p.ciclo == historia.ciclo_atual && historia.encerrada == 0">
+    <div *ngIf="historia.paragrafos_votacao.length > 0">
+      <div *ngFor="let p of historia.paragrafos_votacao">
+        <ion-row *ngIf="p.ciclo > 0 && p.ciclo == historia.ciclo_atual">
           <ion-card>
             <ion-grid>
               <ion-row class="voteInfoHeader">
@@ -31,8 +32,9 @@
               </ion-row>
       
               <ion-row>
-                <ion-text class="texto mini">{{p.texto}</ion-text>
+                <ion-text class="texto mini">{{p.texto}}</ion-text>
               </ion-row>
+              
               <ion-row>
                 <ion-col *ngIf="p.votou == false && p.criador.login != usuarioLogadoLogin">
                   <ion-button fill="outline" (click)="votar(p.id);"><ion-icon icon="checkmark" size="32px"></ion-icon> Gostei</ion-button>
@@ -49,20 +51,27 @@
         </ion-row>
       </div>
     </div>
+    <div *ngIf="historia.paragrafos.length == 0">
+      <p>Nenhum parágrafo ainda!</p>
+    </div>
+    <div *ngIf="historia.paragrafos_votacao.length == 0">
+      <p>Nenhum parágrafo para votação disponível ainda! Comece criando um!</p>
+    </div>
 
 
   </ion-grid>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="historia.encerrada == true">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="historia.encerrada == false">
     <ion-fab-button (click)="criarParagrafo()">
       <ion-icon name="text"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
+  <!--
   <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="historia.criador.login == usuarioLogadoLogin && historia.encerrada == false">
     <ion-fab-button (click)="finalizarHistoria()">
       Finalizar
     </ion-fab-button>
   </ion-fab>
-
+  -->
 </ion-content>

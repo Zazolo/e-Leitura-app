@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header class=\"ion-no-border\">\n  <ion-toolbar>\n    <ion-title>Novo Parágrafo</ion-title>\n    <ion-buttons slot=\"end\">\n      <ion-button (click)=\"criar()\">Publicar</ion-button>\n    </ion-buttons>\n  </ion-toolbar>\n  \n</ion-header>\n<ion-content>\n  <ion-textarea [(ngModel)]=\"texto\" placeholder=\"Digite o paragrafo para votação...\" maxLength=\"500\" rows=\"30\" wrap=\"soft\" autofocus></ion-textarea>\n</ion-content>\n"
+module.exports = "<ion-header class=\"ion-no-border\">\r\n  <ion-toolbar>\r\n    <ion-title>Novo Parágrafo</ion-title>\r\n    <ion-buttons slot=\"end\">\r\n      <ion-button (click)=\"criar()\">Publicar</ion-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n  \r\n</ion-header>\r\n<ion-content>\r\n  <ion-textarea [(ngModel)]=\"texto\" placeholder=\"Digite o paragrafo para votação...\" maxLength=\"500\" rows=\"30\" wrap=\"soft\" autofocus></ion-textarea>\r\n</ion-content>\r\n"
 
 /***/ }),
 
@@ -136,10 +136,11 @@ var CriarParagrafoPage = /** @class */ (function () {
         var _this = this;
         if (this.texto.length > 5) {
             var lastHistoria_1 = this.historiaService.getLast();
-            this.historiaService.criarParagrafo(this.texto, lastHistoria_1.id).then(function (ok) {
-                _this.route.navigateByUrl('/ver-historia');
+            this.historiaService.criarParagrafo(this.texto, lastHistoria_1.id, lastHistoria_1.ciclo_atual).then(function (ok) {
                 _this.historiaService.getIt(lastHistoria_1.id, lastHistoria_1.senha);
+                _this.route.navigateByUrl('/ver-historia');
             }).catch(function (fail) {
+                console.log(fail);
                 alert("Ocorreu um erro ao tentar postar! Tente novamente mais tarde!");
             });
         }

@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar>\n    <ion-title>perfil</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n<ion-grid>\n  <ion-row>\n    <ion-label>Olá, {{login}}!</ion-label>\n  </ion-row>\n  <ion-row>\n    <ion-button (click)=\"deslogar()\">DESLOGAR</ion-button>\n  </ion-row>\n</ion-grid>\n</ion-content>\n"
+module.exports = "<ion-header>\r\n  <ion-toolbar>\r\n    <ion-title>perfil</ion-title>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n<ion-grid>\r\n  <ion-row>\r\n    <h1>Olá, {{login}}!</h1>\r\n  </ion-row>\r\n  <ion-row>\r\n    <ion-button (click)=\"deslogar()\">DESLOGAR</ion-button>\r\n  </ion-row>\r\n</ion-grid>\r\n</ion-content>\r\n"
 
 /***/ }),
 

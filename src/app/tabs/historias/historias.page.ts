@@ -12,9 +12,12 @@ import { Router } from '@angular/router';
 })
 export class HistoriasPage implements OnInit {
 
-  private historias = undefined;
-  constructor(private auth:AuthenticationService, private hist:HistoriaService,
-    private alertCtrl:AlertController, private route:Router, 
+  public historias = undefined;
+  constructor(
+    private auth:AuthenticationService,
+    private hist:HistoriaService,
+    private alertCtrl:AlertController,
+    private route:Router, 
     private toasCtrl:ToastController) { }
 
   obterHistorias(){
@@ -27,7 +30,12 @@ export class HistoriasPage implements OnInit {
   }
   
   ngOnInit() {
+
     this.obterHistorias();
+
+    setInterval(() => {
+      this.obterHistorias();
+    }, 5000);
   }
 
   async participar(id:number){

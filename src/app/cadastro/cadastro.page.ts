@@ -10,6 +10,8 @@ import { AlertController } from '@ionic/angular';
 })
 export class CadastroPage implements OnInit {
 
+  public senha:string = '';
+  public confirm:string = '';
   
   constructor(private auth:AuthenticationService, private route:Router,
     private alertCtrl:AlertController) { }

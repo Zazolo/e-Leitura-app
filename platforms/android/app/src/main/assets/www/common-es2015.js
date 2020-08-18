@@ -693,7 +693,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HistoriaService", function() { return HistoriaService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _ionic_native_http_ngx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic-native/http/ngx */ "./node_modules/@ionic-native/http/ngx/index.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
 /* harmony import */ var _authentication_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./authentication.service */ "./src/app/services/authentication.service.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
 
@@ -705,6 +705,8 @@ let HistoriaService = class HistoriaService {
     constructor(http, auth) {
         this.http = http;
         this.auth = auth;
+        //private masterURL:string = "http://localhost";
+        this.masterURL = "http://eleitura.nie.iff.edu.br";
         this.lastHistoriaLoaded = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
     }
     getLast() {
@@ -714,105 +716,136 @@ let HistoriaService = class HistoriaService {
         return new Promise((resolve, reject) => {
             let token = this.auth.getToken();
             console.log("token --> " + token);
-            this.http.get("http://192.168.43.64/historia/all/", {}, { authentication: token }).then((response) => {
-                resolve(JSON.parse(response.data));
-            }).catch(error => {
-                console.log("Ocorreu algum erro ao obter TODAS as HISTORIAS.");
+            var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]().set('content-type', 'application/json').set('x-access-token', token);
+            this.http.get(this.masterURL + "/sala/disponiveis/", { headers })
+                .subscribe((response) => {
+                console.log(response);
+                resolve(response);
+            }, error => {
                 console.log(error);
-                reject(null);
             });
         });
     }
     getIt(id, senha) {
         return new Promise((resolve, reject) => {
-            this.http.get("http://192.168.43.64/historia/" + id, { senha: senha }, { authentication: this.auth.getToken() }).then((response) => {
-                this.lastHistoriaLoaded.next(JSON.parse(response.data));
+            let token = this.auth.getToken();
+            console.log("token --> " + token);
+            var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]().set('content-type', 'application/json').set('x-access-token', token);
+            this.http.get(this.masterURL + "/sala/" + id + "/" + senha, { headers })
+                .subscribe((data) => {
+                console.log(data);
+                this.lastHistoriaLoaded.next(data);
                 resolve(this.lastHistoriaLoaded.value);
+            }, error => {
+                console.log(error);
             });
         });
     }
     votar(idParagrafo) {
+        let token = this.auth.getToken();
+        console.log("token --> " + token);
         return new Promise((resolve, reject) => {
-            this.http.put("http://192.168.43.64/paragrafo/" + idParagrafo + "/votar/", {}, { authentication: this.auth.getToken() }).then((response) => {
+            var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]().set('content-type', 'application/json').set('x-access-token', token);
+            this.http.put(this.masterURL + "/paragrafo/" + idParagrafo + "/votar/", {}, { headers })
+                .subscribe((data) => {
+                console.log(data);
                 resolve(true);
-            }).catch((error) => {
-                console.log("Erro ao votar <<<<<<<<<<<<<");
-                console.log(error);
+            }, error => {
                 reject(false);
+                console.log(error);
             });
         });
     }
     removerParagrafo(id) {
+        let token = this.auth.getToken();
+        console.log("token --> " + token);
         return new Promise((resolve, reject) => {
-            this.http.delete("http://192.168.43.64/paragrafo/" + id, {}, { authentication: this.auth.getToken() }).then((response) => {
+            var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]().set('content-type', 'application/json').set('x-access-token', token);
+            this.http.delete(this.masterURL + "/paragrafo/" + id, { headers })
+                .subscribe((data) => {
                 resolve(true);
-            }).catch((error) => {
-                console.log("Erro ao remover <<<<<<<<<<<<<");
+            }, error => {
                 console.log(error);
-                reject(false);
             });
         });
     }
-    criarParagrafo(texto, historia_id) {
+    criarParagrafo(texto, historia_id, ciclo) {
+        let token = this.auth.getToken();
+        console.log("token --> " + token);
         return new Promise((resolve, reject) => {
-            this.http.post("http://192.168.43.64/paragrafo/", { texto: texto, historia_id: historia_id }, { authentication: this.auth.getToken() }).then((response) => {
+            var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]().set('content-type', 'application/json').set('x-access-token', token);
+            let post = { texto: texto, ciclo: ciclo };
+            this.http.post(this.masterURL + "/sala/" + historia_id + "/paragrafo/", post, { headers })
+                .subscribe((data) => {
+                console.log('paragrafo criado!');
                 resolve(true);
-            }).catch((error) => {
-                console.log("Erro ao criar o parágrafo <<<<<<<<<<<<<");
+            }, error => {
                 console.log(error);
-                reject(false);
+                reject();
             });
         });
     }
-    criarHistoria(texto, titulo, tempo_ciclo, quantidade_ciclo, senha) {
+    criarHistoria(texto, titulo, tempo_ciclo, total_ciclos, senha) {
+        let token = this.auth.getToken();
+        console.log("token --> " + token);
         return new Promise((resolve, reject) => {
-            if (senha == '') {
-                senha = null;
+            var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]().set('content-type', 'application/json').set('x-access-token', token);
+            let post = { paragrafo: texto, tempo_ciclo: tempo_ciclo, total_ciclos: total_ciclos, titulo: titulo };
+            if (senha == undefined) {
+                senha = '';
             }
-            this.http.post("http://192.168.43.64/historia/", { texto: texto, titulo: titulo, max_ciclos: quantidade_ciclo, tempo_ciclo: tempo_ciclo, senha: senha }, { authentication: this.auth.getToken() }).then((response) => {
+            post = Object.assign({}, post, { senha: senha });
+            console.log("Enviando...");
+            this.http.post(this.masterURL + "/sala/", post, { headers })
+                .subscribe((data) => {
+                console.log("Recebido...", data);
                 resolve(true);
-            }).catch((error) => {
-                console.log("Erro ao criar a história <<<<<<<<<<<<<");
-                console.log(error);
+            }, error => {
+                console.log("Deu erro...");
                 reject(false);
+                console.log(error);
             });
         });
     }
     finalizarHistoria(idHistoria) {
         return new Promise((resolve, reject) => {
-            this.http.put("http://192.168.43.64/historia/" + idHistoria + "/finalize/", {}, { authentication: this.auth.getToken() }).then((response) => {
-                resolve(true);
+            /*
+            this.http.put("http://localhost:2424/historia/" + idHistoria + "/finalize/", {}, {authentication:this.auth.getToken()}).then((response) => {
+              resolve(true);
             }).catch(error => {
-                console.log("Erro ao finalizar a historia!");
-                console.log(error);
-                reject(false);
-            });
+              console.log("Erro ao finalizar a historia!");
+              console.log(error);
+              reject(false);
+            })
+            */
         });
     }
     getRankHistoria(idHistoria) {
         return new Promise((resolve, reject) => {
-            this.http.get("http://192.168.43.64/historia/" + idHistoria + "/rank/", {}, { authentication: this.auth.getToken() }).then((response) => {
-                if (response.data != undefined) {
-                    resolve(JSON.parse(response.data));
-                }
-                resolve(false);
+            /*
+            this.http.get("http://localhost:2424/historia/" + idHistoria + "/rank/", {}, {authentication:this.auth.getToken()}).then((response) => {
+              if(response.data != undefined){
+                resolve(JSON.parse(response.data));
+              }
+              resolve(false);
             }).catch(error => {
-                console.log("Erro ao obter o rank da historia!");
-                console.log(error);
-                reject(false);
-            });
+              console.log("Erro ao obter o rank da historia!");
+              console.log(error);
+              reject(false);
+            })
+            */
         });
     }
 };
 HistoriaService.ctorParameters = () => [
-    { type: _ionic_native_http_ngx__WEBPACK_IMPORTED_MODULE_2__["HTTP"] },
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] },
     { type: _authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"] }
 ];
 HistoriaService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
         providedIn: 'root'
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_native_http_ngx__WEBPACK_IMPORTED_MODULE_2__["HTTP"],
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
         _authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"]])
 ], HistoriaService);
 

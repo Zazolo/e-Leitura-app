@@ -8,7 +8,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 })
 export class PerfilPage implements OnInit {
 
-  private login;
+  public login;
   constructor(
     private auth:AuthenticationService
   ) { }

@@ -9,7 +9,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class HistoriaService {
 
-  private masterURL:string = "http://eleitura.nie.iff.edu.br:2424";
+  //private masterURL:string = "http://localhost";
+  private masterURL:string = "http://eleitura.nie.iff.edu.br";
 
   private lastHistoriaLoaded = new BehaviorSubject(null);
   constructor(
@@ -58,7 +59,23 @@ export class HistoriaService {
     console.log("token --> " + token);
     return new Promise((resolve, reject) => {
       var headers = new HttpHeaders().set('content-type', 'application/json').set('x-access-token', token);
-      this.http.put(this.masterURL + "/paragrafo/"+idParagrafo, {}, {headers})
+      this.http.put(this.masterURL + "/paragrafo/"+idParagrafo+"/votar/", {}, {headers})
+        .subscribe((data:any) => {
+          console.log(data);
+          resolve(true);
+        }, error => {
+          reject(false);
+          console.log(error);
+        });
+    });
+  }
+
+  removerParagrafo(id){
+    let token = this.auth.getToken();
+    console.log("token --> " + token);
+    return new Promise((resolve, reject) => {
+      var headers = new HttpHeaders().set('content-type', 'application/json').set('x-access-token', token);
+      this.http.delete(this.masterURL + "/paragrafo/"+id, {headers})
         .subscribe((data:any) => {
           resolve(true);
         }, error => {
@@ -67,59 +84,44 @@ export class HistoriaService {
     });
   }
 
-  removerParagrafo(id){
+  criarParagrafo(texto, historia_id, ciclo){
+    let token = this.auth.getToken();
+    console.log("token --> " + token);
     return new Promise((resolve, reject) => {
-      let token = this.auth.getToken();
-      console.log("token --> " + token);
-      return new Promise((resolve, reject) => {
-        var headers = new HttpHeaders().set('content-type', 'application/json').set('x-access-token', token);
-        this.http.delete(this.masterURL + "/paragrafo/"+id, {headers})
-          .subscribe((data:any) => {
-            resolve(true);
-          }, error => {
-            console.log(error);
-          });
-      });
-    });
-  }
-
-  criarParagrafo(texto, historia_id){
-    return new Promise((resolve, reject) => {
-      let token = this.auth.getToken();
-      console.log("token --> " + token);
-      return new Promise((resolve, reject) => {
-        var headers = new HttpHeaders().set('content-type', 'application/json').set('x-access-token', token);
-        let post = {texto:texto};
-        this.http.post(this.masterURL + "/sala/"+historia_id+"/paragrafo/", post, {headers})
-          .subscribe((data:any) => {
-            resolve(true);
-          }, error => {
-            console.log(error);
-          });
-      });
+      var headers = new HttpHeaders().set('content-type', 'application/json').set('x-access-token', token);
+      let post = {texto:texto, ciclo:ciclo};
+      this.http.post(this.masterURL + "/sala/"+historia_id+"/paragrafo/", post, {headers})
+        .subscribe((data:any) => {
+          console.log('paragrafo criado!');
+          resolve(true);
+        }, error => {
+          console.log(error);
+          reject();
+        });
     });
   }
 
   criarHistoria(texto, titulo, tempo_ciclo, total_ciclos, senha){
-    return new Promise((resolve, reject) => {
+      let token = this.auth.getToken();
+      console.log("token --> " + token);
       return new Promise((resolve, reject) => {
-        let token = this.auth.getToken();
-        console.log("token --> " + token);
-        return new Promise((resolve, reject) => {
-          var headers = new HttpHeaders().set('content-type', 'application/json').set('x-access-token', token);
-          let post = {paragrafo:texto, tempo_ciclo:tempo_ciclo, total_ciclos:total_ciclos, titulo:titulo};
-          if(senha != undefined){
-            post = {...post, ...{senha:senha}};
-          }
-          this.http.post(this.masterURL + "/sala/", post, {headers})
-            .subscribe((data:any) => {
-              resolve(true);
-            }, error => {
-              console.log(error);
-            });
-        });
+        var headers = new HttpHeaders().set('content-type', 'application/json').set('x-access-token', token);
+        let post = {paragrafo:texto, tempo_ciclo:tempo_ciclo, total_ciclos:total_ciclos, titulo:titulo};
+        if(senha == undefined){
+          senha = '';
+        }
+        post = {...post, ...{senha:senha}};
+        console.log("Enviando...");
+        this.http.post(this.masterURL + "/sala/", post, {headers})
+          .subscribe((data:any) => {
+            console.log("Recebido...", data);
+            resolve(true);
+          }, error => {
+            console.log("Deu erro...");
+            reject(false);
+            console.log(error);
+          });
       });
-    });
   }
 
   finalizarHistoria(idHistoria){

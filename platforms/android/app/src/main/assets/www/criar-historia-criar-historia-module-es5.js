@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header class=\"ion-no-border\">\n  <ion-toolbar>\n    <ion-buttons slot=\"start\" *ngIf=\"stage > 0\">\n      <ion-button (click)=\"recuarStage()\">Voltar</ion-button>\n    </ion-buttons>\n    <ion-title>Nova História</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"stage <= 1\">\n      <ion-button (click)=\"avancarStage()\">Avançar</ion-button>\n    </ion-buttons>\n    <ion-buttons slot=\"end\" *ngIf=\"stage == 2\">\n      <ion-button (click)=\"publicar()\">Publicar</ion-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content *ngIf=\"stage == 0\">\n  <ion-textarea [(ngModel)]=\"texto\" placeholder=\"Digite o primeiro paragrafo da História...\" maxLength=\"500\" rows=\"30\" wrap=\"soft\" autofocus></ion-textarea>\n</ion-content>\n\n<ion-content *ngIf=\"stage == 1\">\n  <ion-list>\n    <ion-item>\n      <ion-label position=\"floating\">Titulo para a História</ion-label>\n      <ion-input type=\"text\" [(ngModel)]=\"titulo\"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label position=\"floating\">Quantidade de ciclos</ion-label>\n      <ion-input type=\"number\" [(ngModel)]=\"quantidade_ciclos\" min=\"1\" max=\"1080\"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label position=\"floating\">Tempo de cada ciclo</ion-label>\n      <ion-input type=\"number\" [(ngModel)]=\"tempo_ciclo\" min=\"1\" max=\"60\"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label position=\"floating\">Senha de acesso</ion-label>\n      <ion-input type=\"text\" [(ngModel)]=\"senha\" minLength=\"3\"></ion-input>\n    </ion-item>\n  </ion-list>\n</ion-content>\n\n<ion-content *ngIf=\"stage == 2\">\n  <ion-grid>\n    <ion-row>\n      <h1>Resumo da história</h1>\n    </ion-row>\n    <ion-row>\n      <ion-label>Título: {{titulo}}</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-label>Quantidade de ciclos: {{quantidade_ciclos}}</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-label>Tempo de cada ciclo: {{tempo_ciclo}}</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-label>Tempo total estimado: {{quantidade_ciclos * tempo_ciclo}} minutos.</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-label>Senha para acesso: {{senha?senha:\"nenhuma\"}}.</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-label>E a história começa...</ion-label>\n    </ion-row>\n    <ion-row>\n      <ion-text>{{texto}}</ion-text>\n    </ion-row>\n  </ion-grid>\n</ion-content>\n"
+module.exports = "<ion-header class=\"ion-no-border\">\r\n  <ion-toolbar>\r\n    <ion-buttons slot=\"start\" *ngIf=\"stage > 0\">\r\n      <ion-button (click)=\"recuarStage()\">Voltar</ion-button>\r\n    </ion-buttons>\r\n    <ion-title>Nova História</ion-title>\r\n    <ion-buttons slot=\"end\" *ngIf=\"stage <= 1\">\r\n      <ion-button (click)=\"avancarStage()\">Avançar</ion-button>\r\n    </ion-buttons>\r\n    <ion-buttons slot=\"end\" *ngIf=\"stage == 2\">\r\n      <ion-button (click)=\"publicar()\">Publicar</ion-button>\r\n    </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content *ngIf=\"stage == 0\">\r\n  <ion-textarea [(ngModel)]=\"texto\" placeholder=\"Digite o primeiro paragrafo da História...\" maxLength=\"500\" rows=\"30\" wrap=\"soft\" autofocus></ion-textarea>\r\n</ion-content>\r\n\r\n<ion-content *ngIf=\"stage == 1\">\r\n  <ion-list>\r\n    <ion-item>\r\n      <ion-label position=\"floating\">Titulo para a História</ion-label>\r\n      <ion-input type=\"text\" [(ngModel)]=\"titulo\"></ion-input>\r\n    </ion-item>\r\n    <ion-item>\r\n      <ion-label position=\"floating\">Quantidade de ciclos</ion-label>\r\n      <ion-input type=\"number\" [(ngModel)]=\"quantidade_ciclos\" min=\"1\" max=\"1080\"></ion-input>\r\n    </ion-item>\r\n    <ion-item>\r\n      <ion-label position=\"floating\">Tempo de cada ciclo</ion-label>\r\n      <ion-input type=\"number\" [(ngModel)]=\"tempo_ciclo\" min=\"1\" max=\"60\"></ion-input>\r\n    </ion-item>\r\n    <ion-item>\r\n      <ion-label position=\"floating\">Senha de acesso</ion-label>\r\n      <ion-input type=\"text\" [(ngModel)]=\"senha\" minLength=\"3\"></ion-input>\r\n    </ion-item>\r\n  </ion-list>\r\n</ion-content>\r\n\r\n<ion-content *ngIf=\"stage == 2\">\r\n  <ion-grid>\r\n    <ion-row>\r\n      <h1>Resumo da história</h1>\r\n    </ion-row>\r\n    <ion-row>\r\n      <ion-label>Título: {{titulo}}</ion-label>\r\n    </ion-row>\r\n    <ion-row>\r\n      <ion-label>Quantidade de ciclos: {{quantidade_ciclos}}</ion-label>\r\n    </ion-row>\r\n    <ion-row>\r\n      <ion-label>Tempo de cada ciclo: {{tempo_ciclo}}</ion-label>\r\n    </ion-row>\r\n    <ion-row>\r\n      <ion-label>Tempo total estimado: {{quantidade_ciclos * tempo_ciclo}} minutos.</ion-label>\r\n    </ion-row>\r\n    <ion-row>\r\n      <ion-label>Senha para acesso: {{senha?senha:\"nenhuma\"}}.</ion-label>\r\n    </ion-row>\r\n    <ion-row>\r\n      <ion-label>E a história começa...</ion-label>\r\n    </ion-row>\r\n    <ion-row>\r\n      <ion-text>{{texto}}</ion-text>\r\n    </ion-row>\r\n  </ion-grid>\r\n</ion-content>\r\n"
 
 /***/ }),
 
@@ -121,14 +121,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _services_historia_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/historia.service */ "./src/app/services/historia.service.ts");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+
 
 
 
 
 var CriarHistoriaPage = /** @class */ (function () {
-    function CriarHistoriaPage(route, hist) {
+    function CriarHistoriaPage(route, hist, alertCtrl) {
         this.route = route;
         this.hist = hist;
+        this.alertCtrl = alertCtrl;
         this.stage = 0;
         this.texto = '';
         this.titulo = '';
@@ -158,19 +161,52 @@ var CriarHistoriaPage = /** @class */ (function () {
     };
     CriarHistoriaPage.prototype.publicar = function () {
         var _this = this;
-        this.hist.criarHistoria(this.texto, this.titulo, this.tempo_ciclo, this.quantidade_ciclos, this.senha).then(function (ok) {
-            _this.route.navigate(['historias']);
-        }).catch(function (e) {
-            console.log(e);
-            alert("Erro ao criar a historia!");
-        });
+        this.hist.criarHistoria(this.texto, this.titulo, this.tempo_ciclo, this.quantidade_ciclos, this.senha).then(function (ok) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+            var alert;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log("Recebeu aqui...", ok);
+                        return [4 /*yield*/, this.alertCtrl.create({
+                                message: "História criada com sucesso!",
+                                buttons: ['Ok']
+                            })];
+                    case 1:
+                        alert = _a.sent();
+                        return [4 /*yield*/, alert.present()];
+                    case 2:
+                        _a.sent();
+                        this.route.navigate(['/tabs/historias']);
+                        return [2 /*return*/];
+                }
+            });
+        }); }).catch(function (e) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+            var alert;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log(e);
+                        return [4 /*yield*/, this.alertCtrl.create({
+                                message: "Erro ao criar a história! Tente novamente mais tarde!",
+                                buttons: ['Ok']
+                            })];
+                    case 1:
+                        alert = _a.sent();
+                        return [4 /*yield*/, alert.present()];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); });
     };
     CriarHistoriaPage.prototype.ngOnInit = function () {
         this.stage = 0;
     };
     CriarHistoriaPage.ctorParameters = function () { return [
         { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"] },
-        { type: _services_historia_service__WEBPACK_IMPORTED_MODULE_3__["HistoriaService"] }
+        { type: _services_historia_service__WEBPACK_IMPORTED_MODULE_3__["HistoriaService"] },
+        { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["AlertController"] }
     ]; };
     CriarHistoriaPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -179,7 +215,8 @@ var CriarHistoriaPage = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./criar-historia.page.scss */ "./src/app/criar-historia/criar-historia.page.scss")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
-            _services_historia_service__WEBPACK_IMPORTED_MODULE_3__["HistoriaService"]])
+            _services_historia_service__WEBPACK_IMPORTED_MODULE_3__["HistoriaService"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["AlertController"]])
     ], CriarHistoriaPage);
     return CriarHistoriaPage;
 }());

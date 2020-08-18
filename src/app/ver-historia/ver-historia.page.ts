@@ -12,19 +12,20 @@ import { AuthenticationService } from '../services/authentication.service';
 })
 export class VerHistoriaPage implements OnInit {
 
-  private historia:Historia = null;
-  private zone = new NgZone({enableLongStackTrace:false});
-  private usuarioLogadoLogin = '';
+  public historia:any = null;
+  public zone = new NgZone({enableLongStackTrace:false});
+  public usuarioLogadoLogin = '';
   constructor(
-    private route:Router,
-    private historiaService:HistoriaService,
-    private auth:AuthenticationService
+    public route:Router,
+    public historiaService:HistoriaService,
+    public auth:AuthenticationService
   ) { }
 
   obterHistoria(){
     this.zone.run(()=>{
       this.historia = this.historiaService.getLast();
-      console.log(this.historia);
+      console.log("Percorrendo parágrafos...");
+      console.log(this.historia.paragrafos);
     });
   }
 
@@ -46,16 +47,17 @@ export class VerHistoriaPage implements OnInit {
   votar(id){
     this.zone.run(()=>{
       let i = 0;
-      for(i = 0; i < this.historia.paragrafos.length; i++){
+      for(i = 0; i < this.historia.paragrafos_votacao.length; i++){
         if(this.historia.paragrafos[i].id == id){
-          this.historia.paragrafos[i] = {...this.historia.paragrafos[i], ...{votou:true}};
+          this.historia.paragrafos_votacao[i] = {...this.historia.paragrafos_votacao[i], ...{votou:true}};
         } else {
-          this.historia.paragrafos[i] = {...this.historia.paragrafos[i], ...{votou:false}};
+          this.historia.paragrafos_votacao[i] = {...this.historia.paragrafos_votacao[i], ...{votou:false}};
         }
       }
       this.historiaService.votar(id).then((ok) => {
         console.log("Voto no paragrafo " + id + " registrado com sucesso.");
       }).catch(error => {
+        console.log("Erro ao votar no parágrafo.");
         this.obterHistoria();
       });
     })
@@ -66,14 +68,15 @@ export class VerHistoriaPage implements OnInit {
     this.zone.run(()=>{
       let i = 0;
       let paragrafo = null;
-      for(i = 0; i < this.historia.paragrafos.length; i++){
-        if(this.historia.paragrafos[i].id == id){
-          paragrafo = this.historia.paragrafos[i];
-          this.historia.paragrafos.splice(i, 1);
+      for(i = 0; i < this.historia.paragrafos_votacao.length; i++){
+        if(this.historia.paragrafos_votacao[i].id == id){
+          paragrafo = this.historia.paragrafos_votacao[i];
+          this.historia.paragrafos_votacao.splice(i, 1);
         }
       }
       this.historiaService.removerParagrafo(id).then((ok) => {
         console.log("Paragrafo " + id + " removido com sucesso.");
+        this.obterHistoria();
       }).catch(error => {
         alert("Erro ao remover o paragrafo!");
         this.obterHistoria();

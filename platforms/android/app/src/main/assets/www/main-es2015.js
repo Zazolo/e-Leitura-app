@@ -441,7 +441,7 @@ module.exports = webpackAsyncContext;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-app>\n  <ion-router-outlet></ion-router-outlet>\n</ion-app>\n"
+module.exports = "<ion-app>\r\n  <ion-router-outlet></ion-router-outlet>\r\n</ion-app>\r\n"
 
 /***/ }),
 
@@ -618,6 +618,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm2015/ionic-storage.js");
 /* harmony import */ var _ionic_native_http_ngx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @ionic-native/http/ngx */ "./node_modules/@ionic-native/http/ngx/index.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+
 
 
 
@@ -635,7 +637,7 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
         declarations: [_app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"]],
         entryComponents: [],
-        imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicModule"].forRoot(), _app_routing_module__WEBPACK_IMPORTED_MODULE_7__["AppRoutingModule"], _ionic_storage__WEBPACK_IMPORTED_MODULE_9__["IonicStorageModule"].forRoot()],
+        imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicModule"].forRoot(), _app_routing_module__WEBPACK_IMPORTED_MODULE_7__["AppRoutingModule"], _ionic_storage__WEBPACK_IMPORTED_MODULE_9__["IonicStorageModule"].forRoot(), _angular_common_http__WEBPACK_IMPORTED_MODULE_11__["HttpClientModule"]],
         providers: [
             _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_6__["StatusBar"],
             _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_5__["SplashScreen"],
@@ -704,7 +706,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm2015/ionic-storage.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
-/* harmony import */ var _ionic_native_http_ngx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic-native/http/ngx */ "./node_modules/@ionic-native/http/ngx/index.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
 
 
 
@@ -713,6 +715,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const TOKEN_KEY = 'auth-token';
 let AuthenticationService = class AuthenticationService {
+    //private masterURL:string = "http://localhost";
     constructor(storage, plt, http) {
         this.storage = storage;
         this.plt = plt;
@@ -721,6 +724,7 @@ let AuthenticationService = class AuthenticationService {
         this.authenticationChecker = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](false);
         this.userAuthenticated = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](null);
         this.token = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"]('');
+        this.masterURL = "http://eleitura.nie.iff.edu.br";
         this.plt.ready().then(() => {
             this.checkToken();
         });
@@ -747,45 +751,45 @@ let AuthenticationService = class AuthenticationService {
     register(login, senha, nome) {
         console.log(nome + login + senha);
         return new Promise((resolve, reject) => {
-            this.http.post('http://192.168.43.64/autenticar/novo/', { login: login, senha: senha, nome: nome }, {}).then((response) => {
-                if (response.status == 200) {
-                    console.log("Login criado com sucesso!");
-                    resolve(true);
-                }
-                else {
-                    reject(false);
-                }
-            }).catch((rejection) => {
-                console.log(rejection);
-                console.log("Erro ao criar o login!");
-                reject(false);
+            let post = { login: login, senha: senha, nome: nome };
+            var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpHeaders"]().set('content-type', 'application/json');
+            this.http.post(this.masterURL + "/autenticacao/novo/", post, { headers })
+                .subscribe(data => {
+                console.log(data);
+                resolve(data);
+            }, error => {
+                console.log(error);
             });
         });
     }
     login(login, senha) {
         return new Promise((resolve, reject) => {
-            this.http.post('http://192.168.43.64/autenticar/', { login: login, senha: senha }, {}).then((response) => {
+            let post = { login: login, senha: senha };
+            var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpHeaders"]().set('content-type', 'application/json');
+            this.http.post(this.masterURL + "/autenticacao/", post, { headers })
+                .subscribe(response => {
                 console.log(response);
-                if (response.status == 200) {
-                    response.data = JSON.parse(response.data);
-                    console.log(response.data);
-                    this.storage.set(TOKEN_KEY, 'Bearer ' + response.data.response).then(() => {
-                        console.log("Inserindo token--->" + response.data.response);
+                console.log("AQUIII!");
+                if (response != null) {
+                    let parsed_response = response;
+                    console.log(parsed_response);
+                    this.storage.set(TOKEN_KEY, parsed_response.token).then(() => {
+                        console.log("Inserindo token--->" + parsed_response.token);
                         this.authenticationState.next(true);
                         this.storage.set('usuario', login).then((ok) => {
                             this.userAuthenticated.next(login);
                             resolve(true);
                         });
                     });
-                    reject(false);
                 }
                 else {
                     console.log("REJEITADO!");
-                    console.log(JSON.stringify(response));
                     reject(false);
                 }
-            }).catch(error => {
-                reject(null);
+            }, error => {
+                console.log("AQUIII! NO ERROR!");
+                console.log(error);
+                reject(false);
             });
         });
     }
@@ -809,13 +813,13 @@ let AuthenticationService = class AuthenticationService {
 AuthenticationService.ctorParameters = () => [
     { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"] },
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["Platform"] },
-    { type: _ionic_native_http_ngx__WEBPACK_IMPORTED_MODULE_5__["HTTP"] }
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpClient"] }
 ];
 AuthenticationService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
         providedIn: 'root'
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["Platform"], _ionic_native_http_ngx__WEBPACK_IMPORTED_MODULE_5__["HTTP"]])
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["Platform"], _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpClient"]])
 ], AuthenticationService);
 
 
@@ -883,7 +887,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/tiago/Documentos/e-Leitura-app/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\Users\tiago\GitHub\e-Leitura-app\src\main.ts */"./src/main.ts");
 
 
 /***/ })

@@ -19,7 +19,8 @@ export class AuthenticationService {
   userAuthenticated = new BehaviorSubject(null);
   token = new BehaviorSubject('');
 
-  private masterURL:string = "http://eleitura.nie.iff.edu.br:2424";
+  private masterURL:string = "http://eleitura.nie.iff.edu.br";
+  //private masterURL:string = "http://localhost";
 
   constructor(private storage: Storage, private plt: Platform, private http: HttpClient) { 
     this.plt.ready().then(() => {
@@ -72,7 +73,7 @@ export class AuthenticationService {
       this.http.post(this.masterURL + "/autenticacao/", post, {headers})
         .subscribe(response => {
           console.log(response);
-
+          console.log("AQUIII!");
           if(response != null) {
             let parsed_response:any = response;
             console.log(parsed_response);
@@ -84,14 +85,15 @@ export class AuthenticationService {
                 resolve(true);
               })
             });
-            reject(false);
           } else {
             console.log("REJEITADO!");
             reject(false)
           }
 
         }, error => {
+          console.log("AQUIII! NO ERROR!");
           console.log(error);
+          reject(false);
         });
       
     })
@@ -99,7 +101,7 @@ export class AuthenticationService {
     
   }
  
-  logout() {/*
+  logout() {
     this.storage.remove(TOKEN_KEY).then(() => {
       this.storage.remove('usuario').then((ok) => {
         this.userAuthenticated.next(null);
@@ -107,7 +109,7 @@ export class AuthenticationService {
       });
       this.authenticationState.next(false);
       console.log("Deslogando...? 22")
-    });*/
+    });
   }
  
   isAuthenticated() {

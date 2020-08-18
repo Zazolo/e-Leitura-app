@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
     <domain-config cleartextTrafficPermitted="true" >
-        <domain includeSubdomains="true">192.168.43.64</domain>
+        <domain includeSubdomains="true">eleitura.nie.iff.edu.br</domain>
+        <domain includeSubdomains="true">http://eleitura.nie.iff.edu.br/</domain>
+        <domain includeSubdomains="true">200.143.198.42</domain>
         <domain includeSubdomains="true">localhost</domain>
     </domain-config>
 </network-security-config>

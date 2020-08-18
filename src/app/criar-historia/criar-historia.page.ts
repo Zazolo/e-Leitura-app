@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HistoriaService } from '../services/historia.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-criar-historia',
@@ -10,17 +11,18 @@ import { HistoriaService } from '../services/historia.service';
 export class CriarHistoriaPage implements OnInit {
 
 
-  private stage = 0;
+  public stage = 0;
 
-  private texto = '';
-  private titulo = '';
-  private senha = '';
-  private quantidade_ciclos = 1;
-  private tempo_ciclo = 1;
+  public texto = '';
+  public titulo = '';
+  public senha = '';
+  public quantidade_ciclos = 1;
+  public tempo_ciclo = 1;
 
   constructor(
     private route:Router,
-    private hist:HistoriaService
+    private hist:HistoriaService,
+    private alertCtrl:AlertController
   ) { }
 
   avancarStage(){
@@ -47,12 +49,21 @@ export class CriarHistoriaPage implements OnInit {
   }
 
   publicar(){
-    this.hist.criarHistoria(this.texto, this.titulo, this.tempo_ciclo, this.quantidade_ciclos, this.senha).then((ok) => {
-      this.route.navigate(['/historias']);
-      alert("História Criada com sucesso!");
-    }).catch(e => {
+    this.hist.criarHistoria(this.texto, this.titulo, this.tempo_ciclo, this.quantidade_ciclos, this.senha).then(async (ok) => {
+      console.log("Recebeu aqui...", ok);
+      const alert = await this.alertCtrl.create({
+        message: "História criada com sucesso!",
+        buttons: ['Ok']
+      });
+      await alert.present();
+      this.route.navigate(['/tabs/historias']);
+    }).catch(async e => {
       console.log(e);
-      alert("Erro ao criar a historia!");
+      const alert = await this.alertCtrl.create({
+        message: "Erro ao criar a história! Tente novamente mais tarde!",
+        buttons: ['Ok']
+      });
+      await alert.present();
     })
   }
 

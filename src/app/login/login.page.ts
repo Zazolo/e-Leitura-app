@@ -10,13 +10,13 @@ import { AlertController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
 
-  private login;
-  private senha;
+  public login;
+  public senha;
   
   constructor(
-    private route:Router,
-    private authService:AuthenticationService,
-    private alertCtrl:AlertController
+    public route:Router,
+    public authService:AuthenticationService,
+    public alertCtrl:AlertController
   ) { }
 
   ngOnInit() {
@@ -28,6 +28,8 @@ export class LoginPage implements OnInit {
 
   async logar(){
     this.authService.login(this.login, this.senha).then(async (response) => {
+      console.log("RESPONSE RECEBIDA!");
+      console.log(response);
       const alert = await this.alertCtrl.create({
         message: "Seja bem-vindo!",
         buttons: ['Ok']
@@ -35,6 +37,7 @@ export class LoginPage implements OnInit {
       await alert.present();
 
     }).catch(async error => {
+      console.log(error);
       const alert = await this.alertCtrl.create({
         message: "Nome de usuário ou senha incorreto(s)!",
         buttons: ['Ok']

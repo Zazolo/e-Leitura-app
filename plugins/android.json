@@ -7,33 +7,33 @@
     "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "io.ionic.starter"
-    },
-    "cordova-plugin-statusbar": {
-      "PACKAGE_NAME": "io.ionic.starter"
+    "cordova-plugin-advanced-http": {
+      "OKHTTP_VERSION": "3.10.0",
+      "PACKAGE_NAME": "iff.nie.eleitura"
     },
     "cordova-plugin-device": {
-      "PACKAGE_NAME": "io.ionic.starter"
+      "PACKAGE_NAME": "iff.nie.eleitura"
     },
-    "cordova-plugin-splashscreen": {
-      "PACKAGE_NAME": "io.ionic.starter"
+    "cordova-plugin-ionic-keyboard": {
+      "PACKAGE_NAME": "iff.nie.eleitura"
     },
     "cordova-plugin-ionic-webview": {
       "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+",
-      "PACKAGE_NAME": "io.ionic.starter"
+      "PACKAGE_NAME": "iff.nie.eleitura"
     },
-    "cordova-plugin-ionic-keyboard": {
-      "PACKAGE_NAME": "io.ionic.starter"
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "iff.nie.eleitura"
     },
-    "cordova-plugin-advanced-http": {
-      "OKHTTP_VERSION": "3.10.0",
-      "PACKAGE_NAME": "io.ionic.starter"
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "iff.nie.eleitura"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "iff.nie.eleitura"
     }
   },
   "dependent_plugins": {
     "cordova-plugin-file": {
-      "PACKAGE_NAME": "io.ionic.starter"
+      "PACKAGE_NAME": "iff.nie.eleitura"
     }
   }
 }
